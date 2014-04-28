@@ -13,5 +13,12 @@
             <include>**/*</include>
         </includes>
     </fileSet>
+    <fileSet>
+      <directory>${basedir}/include/</directory>
+      <outputDirectory>/include/</outputDirectory>
+        <includes>
+            <include>**/*</include>
+        </includes>
+    </fileSet>
   </fileSets>
 </assembly>
