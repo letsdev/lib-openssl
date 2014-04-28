@@ -1,0 +1,19 @@
+##########################################################################################
+//TODO
+version nummer im build script aus der pom holen.
+##########################################################################################
+How to build.
+1. Put openssl source in this folder named "openssl-<VERSION>"
+2. open the build-libssl.sh in an editor of your choice.
+3. change the version line (line 26) to the open ssl version you want to build.
+4. the libs are contained in lib/android and lib/ios after build
+
+##########################################################################################
+For iOS !!!
+
+The Wrapper needs Openssl.framework 
+The iOS Projekt needs Ssl.framework and Crypto.framework
+
+Why this is so is currently unkonwn to me. Fact is it doesn't really matter. The lib is not included twice since the wrapper only needs it to compile successful and does not inculde the lib itself.
+
+##########################################################################################
