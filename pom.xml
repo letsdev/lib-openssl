@@ -7,6 +7,51 @@
     
     <name>Open ssl for mobile (android and iOS)</name>
     
+      <scm>
+        <connection>scm:git:git@dev1:ext-lib-openssl.git</connection>
+        <url>scm:git:git@dev1:ext-lib-openssl.git</url>
+        <developerConnection>scm:git:git@dev1:ext-lib-openssl.git</developerConnection>
+      <tag>HEAD</tag>
+  </scm>
+
+    <!-- organization -->
+    <organization>
+        <name>let's dev</name>
+        <url>http://www.letsdev.de</url>
+    </organization>
+
+    <!-- scm -->
+    <developers>
+        <developer>
+            <name>Christian Wack</name>
+            <email>christian.wack@letsdev.de</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Karl-J. Wack</name>
+            <email>karl-j.wack@letsdev.de</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>Snapshots</name>
+            <url>${snapshots.url}</url>
+        </snapshotRepository>
+        <repository>
+            <id>releases</id>
+            <name>Releases</name>
+            <url>${releases.url}</url>
+        </repository>
+    </distributionManagement>
+
+    
     <build>
         <plugins>
 
@@ -54,4 +99,7 @@
     <dependencies>
 
     </dependencies>
+    
+    
+    
 </project>
