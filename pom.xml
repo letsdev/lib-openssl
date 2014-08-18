@@ -63,7 +63,7 @@
                     <!-- Run lib build script -->
                     <execution>
                         <id>Create openssl bin</id>
-                        <phase>generate-sources</phase>
+                        <phase>compile</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>

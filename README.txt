@@ -1,11 +1,7 @@
 ##########################################################################################
-//TODO
-version nummer im build script aus der pom holen.
-##########################################################################################
 How to build.
 1. Put openssl source in this folder named "openssl-<VERSION>"
-2. open the build-libssl.sh in an editor of your choice.
-3. change the version line (line 26) to the open ssl version you want to build.
+3. change the version in the pom.xml file to the open ssl version you want to build.
 4. the libs are contained in lib/android and lib/ios after build
 
 ##########################################################################################
