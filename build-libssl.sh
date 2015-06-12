@@ -77,7 +77,7 @@ mkdir -p "${CURRENTPATH}/lib/android/libs"
 mkdir -p "${CURRENTPATH}/lib/android/libs/armeabi"
 mkdir -p "${CURRENTPATH}/lib/android/libs/armeabi-v7a"
 mkdir -p "${CURRENTPATH}/lib/android/libs/x86"
-mkdir -p "${CURRENTPATH}/lib/android/libs/arm64"
+mkdir -p "${CURRENTPATH}/lib/android/libs/arm64-v8a"
 
 echo "clear export flags"
 export NDK=
@@ -379,8 +379,8 @@ PATH=$TOOLCHAIN_PATH:$PATH make build_libs
 
 echo "moving lib"
 
-mv libcrypto.a ${CURRENTPATH}/lib/android/libs/arm64/
-mv libssl.a ${CURRENTPATH}/lib/android/libs/arm64/
+mv libcrypto.a ${CURRENTPATH}/lib/android/libs/arm64-v8a/
+mv libssl.a ${CURRENTPATH}/lib/android/libs/arm64-v8a/
 
 
 
