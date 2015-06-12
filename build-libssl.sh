@@ -326,6 +326,64 @@ echo "moving lib"
 mv libcrypto.a ${CURRENTPATH}/lib/android/libs/x86/
 mv libssl.a ${CURRENTPATH}/lib/android/libs/x86/
 
+############################################## arm64 ###################################################################
+
+echo "starting android arm64 build"
+
+if [ ! -d "${ANDROID_NDK_HOME}" ]; then
+  echo "ANDROID_NDK_HOME not defined or directory does not exist"
+  exit 1
+fi
+
+echo "exporting android home and toolchain path"
+export NDK=$ANDROID_NDK_HOME 
+export TOOLCHAIN_PATH=${CURRENTPATH}/bin/android-toolchain-arm64 
+
+if [ -d "${TOOLCHAIN_PATH}" ]; then
+    echo "toolchain exists"
+else
+    echo "toolchain missing, creat it"
+    $NDK/build/tools/make-standalone-toolchain.sh --platform=android-21 --toolchain=aarch64-linux-android-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-arm64 --arch=arm64
+fi
+
+echo "exporting environment and compiler flags"
+
+
+echo "building android arm64"
+echo "exporting environment and compiler flags"
+
+export TOOL=bin/aarch64-linux-android 
+export NDK_TOOLCHAIN_BASENAME=${TOOLCHAIN_PATH}/${TOOL} 
+export CC=$NDK_TOOLCHAIN_BASENAME-gcc 
+export CXX=$NDK_TOOLCHAIN_BASENAME-g++ 
+export LINK=${CXX} 
+export LD=$NDK_TOOLCHAIN_BASENAME-ld 
+export AR=$NDK_TOOLCHAIN_BASENAME-ar 
+export RANLIB=$NDK_TOOLCHAIN_BASENAME-ranlib 
+export STRIP=$NDK_TOOLCHAIN_BASENAME-strip 
+export ARCH_FLAGS= 
+export ARCH_LINK= 
+export CPPFLAGS=" ${ARCH_FLAGS} -fpic -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 " 
+export CXXFLAGS=" ${ARCH_FLAGS} -fpic -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 -frtti -fexceptions " 
+export CFLAGS=" ${ARCH_FLAGS} -fpic -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 " 
+export LDFLAGS=" ${ARCH_LINK} "
+
+echo "configure openssl for arm64"
+
+./Configure android
+
+echo "building lib"
+
+PATH=$TOOLCHAIN_PATH:$PATH make build_libs
+
+echo "moving lib"
+
+mv libcrypto.a ${CURRENTPATH}/lib/android/libs/arm64/
+mv libssl.a ${CURRENTPATH}/lib/android/libs/arm64/
+
+
+
+
 echo "cleanig up temp directory"
 rm -rf "${CURRENTPATH}/src/openssl-${VERSION}"
 
