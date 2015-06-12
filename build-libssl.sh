@@ -77,6 +77,7 @@ mkdir -p "${CURRENTPATH}/lib/android/libs"
 mkdir -p "${CURRENTPATH}/lib/android/libs/armeabi"
 mkdir -p "${CURRENTPATH}/lib/android/libs/armeabi-v7a"
 mkdir -p "${CURRENTPATH}/lib/android/libs/x86"
+mkdir -p "${CURRENTPATH}/lib/android/libs/arm64"
 
 echo "clear export flags"
 export NDK=
