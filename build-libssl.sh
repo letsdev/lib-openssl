@@ -24,8 +24,8 @@
 #  Change values here													  #
 #				                                                          #
 #VERSION=${POM_VERSION}				                                      #
-VERSION=1.0.2a
-SDKVERSION="8.3"
+VERSION=1.0.2d
+SDKVERSION="8.4"
 #																		  #
 ###########################################################################
 #																		  #
