@@ -7,12 +7,12 @@
     
     <name>Open ssl for mobile (android and iOS)</name>
     
-      <scm>
-        <connection>scm:git:git@dev1:ext-lib-openssl.git</connection>
-        <url>scm:git:git@dev1:ext-lib-openssl.git</url>
-        <developerConnection>scm:git:git@dev1:ext-lib-openssl.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+    <scm>
+        <url>http://dev1/gitlab/admin/projects/ld/lib-openssl</url>
+        <connection>scm:git:git://dev1:ld/lib-openssl.git</connection>
+        <developerConnection>scm:git:git@dev1:ld/lib-openssl.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
 
     <!-- organization -->
     <organization>
