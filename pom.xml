@@ -8,7 +8,7 @@
     <name>Open ssl for mobile (android and iOS)</name>
     
     <scm>
-        <url>http://dev1/gitlab/admin/projects/ld/lib-openssl</url>
+        <url>http://dev1/gitlab/ld/lib-openssl</url>
         <connection>scm:git:git://dev1:ld/lib-openssl.git</connection>
         <developerConnection>scm:git:git@dev1:ld/lib-openssl.git</developerConnection>
         <tag>HEAD</tag>
