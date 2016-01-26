@@ -41,17 +41,16 @@
     <distributionManagement>
         <snapshotRepository>
             <id>snapshots</id>
-            <name>Snapshots</name>
+            <name>Snapshots Intern</name> <!-- deploy snapshot versions only intern -->
             <url>${snapshots.url}</url>
         </snapshotRepository>
         <repository>
-            <id>releases</id>
-            <name>Releases</name>
-            <url>${releases.url}</url>
+            <id>releases-extern</id>
+            <name>Releases Extern</name>
+            <url>${ld-lib-utils-releases.url}</url>
         </repository>
     </distributionManagement>
 
-    
     <build>
         <plugins>
 
