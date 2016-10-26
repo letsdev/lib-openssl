@@ -21,7 +21,7 @@
 ###########################################################################
 #  Change values here													  #
 #				
-VERSION="1.0.2h"													      #
+VERSION="1.0.2j"													      #
 SDKVERSION=`xcrun -sdk iphoneos --show-sdk-version`														  #
 CONFIG_OPTIONS=""
 CURL_OPTIONS=""
