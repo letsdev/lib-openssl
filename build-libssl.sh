@@ -200,7 +200,7 @@ if [ -d "${TOOLCHAIN_PATH}" ]; then
     echo "toolchain exists"
 else
     echo "toolchain missing, creat it"
-    $NDK/build/tools/make-standalone-toolchain.sh --platform=android-9 --toolchain=arm-linux-androideabi-4.8 --install-dir=${CURRENTPATH}/bin/android-toolchain-arm
+    $NDK/build/tools/make-standalone-toolchain.sh --platform=android-23 --toolchain=arm-linux-androideabi-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-arm
 fi
 
 echo "exporting environment and compiler flags"
@@ -216,9 +216,9 @@ export RANLIB=$NDK_TOOLCHAIN_BASENAME-ranlib
 export STRIP=$NDK_TOOLCHAIN_BASENAME-strip 
 export ARCH_FLAGS="-march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16" 
 export ARCH_LINK="-march=armv7-a -Wl,--fix-cortex-a8" 
-export CPPFLAGS=" ${ARCH_FLAGS} -fpic -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 " 
-export CXXFLAGS=" ${ARCH_FLAGS} -fpic -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 -frtti -fexceptions " 
-export CFLAGS=" ${ARCH_FLAGS} -fpic -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 " 
+export CPPFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 " 
+export CXXFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 -frtti -fexceptions " 
+export CFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 " 
 export LDFLAGS=" ${ARCH_LINK} "
 
 echo "configure openssl for armv7"
@@ -250,9 +250,9 @@ export RANLIB=$NDK_TOOLCHAIN_BASENAME-ranlib
 export STRIP=$NDK_TOOLCHAIN_BASENAME-strip 
 export ARCH_FLAGS="-mthumb" 
 export ARCH_LINK= 
-export CPPFLAGS=" ${ARCH_FLAGS} -fpic -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 " 
-export CXXFLAGS=" ${ARCH_FLAGS} -fpic -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 -frtti -fexceptions " 
-export CFLAGS=" ${ARCH_FLAGS} -fpic -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 "
+export CPPFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 " 
+export CXXFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 -frtti -fexceptions " 
+export CFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 "
 export LDFLAGS=" ${ARCH_LINK} " 
 
 
@@ -279,7 +279,7 @@ if [ -d "${TOOLCHAIN_PATH}" ]; then
     echo "toolchain exists"
 else
     echo "toolchain missing, creat it"
-    $NDK/build/tools/make-standalone-toolchain.sh --platform=android-9 --toolchain=x86-4.8 --install-dir=${CURRENTPATH}/bin/android-toolchain-x86
+    $NDK/build/tools/make-standalone-toolchain.sh --platform=android-23 --toolchain=x86-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-x86
 fi
 
 echo "exporting environment and compiler flags"
@@ -295,14 +295,14 @@ export RANLIB=$NDK_TOOLCHAIN_BASENAME-ranlib
 export STRIP=$NDK_TOOLCHAIN_BASENAME-strip 
 export ARCH_FLAGS="-march=i686 -msse3 -mstackrealign -mfpmath=sse" 
 export ARCH_LINK=
-export CPPFLAGS=" ${ARCH_FLAGS} -fpic -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 " 
-export CXXFLAGS=" ${ARCH_FLAGS} -fpic -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 -frtti -fexceptions " 
-export CFLAGS=" ${ARCH_FLAGS} -fpic -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 " 
+export CPPFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 " 
+export CXXFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 -frtti -fexceptions " 
+export CFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 " 
 export LDFLAGS=" ${ARCH_LINK} " 
 
 echo "configure openssl for x86"
 
-./Configure android-x86 
+./Configure -DOPENSSL_PIC -fPIC android-x86
 
 echo "building lib"
 
@@ -330,7 +330,7 @@ if [ -d "${TOOLCHAIN_PATH}" ]; then
     echo "toolchain exists"
 else
     echo "toolchain missing, creat it"
-    $NDK/build/tools/make-standalone-toolchain.sh --platform=android-21 --toolchain=aarch64-linux-android-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-arm64 --arch=arm64
+    $NDK/build/tools/make-standalone-toolchain.sh --platform=android-23 --toolchain=aarch64-linux-android-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-arm64 --arch=arm64
 fi
 
 echo "exporting environment and compiler flags"
@@ -350,9 +350,9 @@ export RANLIB=$NDK_TOOLCHAIN_BASENAME-ranlib
 export STRIP=$NDK_TOOLCHAIN_BASENAME-strip 
 export ARCH_FLAGS= 
 export ARCH_LINK= 
-export CPPFLAGS=" ${ARCH_FLAGS} -fpic -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 " 
-export CXXFLAGS=" ${ARCH_FLAGS} -fpic -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 -frtti -fexceptions " 
-export CFLAGS=" ${ARCH_FLAGS} -fpic -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 " 
+export CPPFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 " 
+export CXXFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 -frtti -fexceptions " 
+export CFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 " 
 export LDFLAGS=" ${ARCH_LINK} "
 
 echo "configure openssl for arm64"

@@ -53,7 +53,27 @@
 
     <build>
         <plugins>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>bin</directory>
+                        </fileset>
+                        <fileset>
+                            <directory>src</directory>
+                        </fileset>
+                        <fileset>
+                            <directory>include</directory>
+                        </fileset>
+                        <fileset>
+                            <directory>lib</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
 
             <plugin>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -81,7 +101,8 @@
                         <descriptor>ssl.xml</descriptor>
                         <descriptor>openssl.xml</descriptor>
                         <descriptor>crypto.xml</descriptor>
-                        <descriptor>android.xml</descriptor></descriptors>
+                        <descriptor>android.xml</descriptor>
+                    </descriptors>
                 </configuration>
                 <executions>
                     <execution>
