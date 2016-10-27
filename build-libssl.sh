@@ -223,7 +223,7 @@ export LDFLAGS=" ${ARCH_LINK} "
 
 echo "configure openssl for armv7"
 
-./Configure android-armv7
+./Configure -DOPENSSL_PIC -fPIC android-armv7
 
 echo "building lib"
 
@@ -258,7 +258,7 @@ export LDFLAGS=" ${ARCH_LINK} "
 
 echo "configure openssl for arm"
 
-./Configure android
+./Configure -DOPENSSL_PIC -fPIC android
 
 echo "building lib"
 
@@ -357,7 +357,7 @@ export LDFLAGS=" ${ARCH_LINK} "
 
 echo "configure openssl for arm64"
 
-./Configure android
+./Configure -DOPENSSL_PIC -fPIC android
 
 echo "building lib"
 
