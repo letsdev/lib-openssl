@@ -333,7 +333,7 @@ if [ -d "${TOOLCHAIN_PATH}" ]; then
 else
     echo "toolchain missing, creat it"
     echo "$NDK/build/tools/make-standalone-toolchain.sh --platform=android-9 --toolchain=aarch64-linux-android-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-arm64 --arch=arm64"
-    $NDK/build/tools/make-standalone-toolchain.sh --platform=android-9 --toolchain=aarch64-linux-android-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-arm64 --arch=arm64
+    $NDK/build/tools/make-standalone-toolchain.sh --platform=android-21 --toolchain=aarch64-linux-android-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-arm64 --arch=arm64
 fi
 
 echo "exporting environment and compiler flags"
