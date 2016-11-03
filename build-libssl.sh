@@ -37,8 +37,7 @@ ENABLE_EC_NISTP_64_GCC_128=""
 
 
 CURRENTPATH=`pwd`
-#ARCHS="i386 x86_64 armv7 armv7s arm64"
-ARCHS="i386"
+ARCHS="i386 x86_64 armv7 armv7s arm64"
 DEVELOPER=`xcode-select -print-path`
 MIN_SDK_VERSION="7.0"
 if [ ! -d "$DEVELOPER" ]; then
@@ -225,7 +224,6 @@ echo "configure openssl for armv7"
 
 echo "building lib"
 
-#PATH=$TOOLCHAIN_PATH:$PATH make depend
 PATH=$TOOLCHAIN_PATH:$PATH make build_libs
 
 echo "moving lib"
@@ -259,7 +257,7 @@ echo "configure openssl for arm"
 ./Configure -DOPENSSL_PIC -fPIC android
 
 echo "building lib"
-#PATH=$TOOLCHAIN_PATH:$PATH make depend
+
 PATH=$TOOLCHAIN_PATH:$PATH make build_libs
 
 echo "moving lib"
@@ -305,7 +303,7 @@ echo "configure openssl for x86"
 ./Configure shared android-x86
 
 echo "building lib"
-#PATH=$TOOLCHAIN_PATH:$PATH make depend
+
 PATH=$TOOLCHAIN_PATH:$PATH make build_libs
 
 echo "moving lib"
@@ -364,7 +362,6 @@ echo "configure openssl for arm64"
 
 echo "building lib"
 
-#PATH=$TOOLCHAIN_PATH:$PATH make depend
 PATH=$TOOLCHAIN_PATH:$PATH make build_libs
 
 echo "moving lib"
