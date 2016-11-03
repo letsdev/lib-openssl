@@ -37,7 +37,8 @@ ENABLE_EC_NISTP_64_GCC_128=""
 
 
 CURRENTPATH=`pwd`
-ARCHS="i386 x86_64 armv7 armv7s arm64"
+#ARCHS="i386 x86_64 armv7 armv7s arm64"
+ARCHS="i386"
 DEVELOPER=`xcode-select -print-path`
 MIN_SDK_VERSION="7.0"
 if [ ! -d "$DEVELOPER" ]; then
@@ -150,8 +151,10 @@ do
 	make clean >> "${LOG}" 2>&1
 done
 echo "Build library..."
-lipo -create ${CURRENTPATH}/bin/iPhoneSimulator${SDKVERSION}-i386.sdk/lib/libssl.a ${CURRENTPATH}/bin/iPhoneSimulator${SDKVERSION}-x86_64.sdk/lib/libssl.a  ${CURRENTPATH}/bin/iPhoneOS${SDKVERSION}-armv7.sdk/lib/libssl.a ${CURRENTPATH}/bin/iPhoneOS${SDKVERSION}-armv7s.sdk/lib/libssl.a ${CURRENTPATH}/bin/iPhoneOS${SDKVERSION}-arm64.sdk/lib/libssl.a -output ${CURRENTPATH}/lib/libssl.a
-lipo -create ${CURRENTPATH}/bin/iPhoneSimulator${SDKVERSION}-i386.sdk/lib/libcrypto.a ${CURRENTPATH}/bin/iPhoneSimulator${SDKVERSION}-x86_64.sdk/lib/libcrypto.a ${CURRENTPATH}/bin/iPhoneOS${SDKVERSION}-armv7.sdk/lib/libcrypto.a ${CURRENTPATH}/bin/iPhoneOS${SDKVERSION}-armv7s.sdk/lib/libcrypto.a ${CURRENTPATH}/bin/iPhoneOS${SDKVERSION}-arm64.sdk/lib/libcrypto.a -output ${CURRENTPATH}/lib/libcrypto.a
+#lipo -create ${CURRENTPATH}/bin/iPhoneSimulator${SDKVERSION}-i386.sdk/lib/libssl.a ${CURRENTPATH}/bin/iPhoneSimulator${SDKVERSION}-x86_64.sdk/lib/libssl.a  ${CURRENTPATH}/bin/iPhoneOS${SDKVERSION}-armv7.sdk/lib/libssl.a ${CURRENTPATH}/bin/iPhoneOS${SDKVERSION}-armv7s.sdk/lib/libssl.a ${CURRENTPATH}/bin/iPhoneOS${SDKVERSION}-arm64.sdk/lib/libssl.a -output ${CURRENTPATH}/lib/libssl.a
+#lipo -create ${CURRENTPATH}/bin/iPhoneSimulator${SDKVERSION}-i386.sdk/lib/libcrypto.a ${CURRENTPATH}/bin/iPhoneSimulator${SDKVERSION}-x86_64.sdk/lib/libcrypto.a ${CURRENTPATH}/bin/iPhoneOS${SDKVERSION}-armv7.sdk/lib/libcrypto.a ${CURRENTPATH}/bin/iPhoneOS${SDKVERSION}-armv7s.sdk/lib/libcrypto.a ${CURRENTPATH}/bin/iPhoneOS${SDKVERSION}-arm64.sdk/lib/libcrypto.a -output ${CURRENTPATH}/lib/libcrypto.a
+lipo -create ${CURRENTPATH}/bin/iPhoneSimulator${SDKVERSION}-i386.sdk/lib/libssl.a -output ${CURRENTPATH}/lib/libssl.a
+lipo -create ${CURRENTPATH}/bin/iPhoneSimulator${SDKVERSION}-i386.sdk/lib/libcrypto.a -output ${CURRENTPATH}/lib/libcrypto.a
 mkdir -p ${CURRENTPATH}/include
 cp -R ${CURRENTPATH}/bin/iPhoneSimulator${SDKVERSION}-i386.sdk/include/openssl ${CURRENTPATH}/include/
 echo "Building done."
@@ -219,10 +222,10 @@ export LDFLAGS=" ${ARCH_LINK} "
 echo "configure openssl for armv7"
 
 ./Configure -DOPENSSL_PIC -fPIC android-armv7
-make depend
+
 echo "building lib"
 
-PATH=$TOOLCHAIN_PATH:$PATH make depend
+#PATH=$TOOLCHAIN_PATH:$PATH make depend
 PATH=$TOOLCHAIN_PATH:$PATH make build_libs
 
 echo "moving lib"
@@ -256,7 +259,7 @@ echo "configure openssl for arm"
 ./Configure -DOPENSSL_PIC -fPIC android
 
 echo "building lib"
-PATH=$TOOLCHAIN_PATH:$PATH make depend
+#PATH=$TOOLCHAIN_PATH:$PATH make depend
 PATH=$TOOLCHAIN_PATH:$PATH make build_libs
 
 echo "moving lib"
@@ -302,7 +305,7 @@ echo "configure openssl for x86"
 ./Configure shared android-x86
 
 echo "building lib"
-PATH=$TOOLCHAIN_PATH:$PATH make depend
+#PATH=$TOOLCHAIN_PATH:$PATH make depend
 PATH=$TOOLCHAIN_PATH:$PATH make build_libs
 
 echo "moving lib"
@@ -323,17 +326,18 @@ fi
 
 echo "exporting android home and toolchain path"
 export NDK=$ANDROID_NDK_HOME 
-export TOOLCHAIN_PATH=${CURRENTPATH}/bin/android-toolchain-arm64 
+export TOOLCHAIN_PATH=${CURRENTPATH}/bin/android-toolchain-arm64
 
 if [ -d "${TOOLCHAIN_PATH}" ]; then
     echo "toolchain exists"
 else
     echo "toolchain missing, creat it"
+    echo "$NDK/build/tools/make-standalone-toolchain.sh --platform=android-9 --toolchain=aarch64-linux-android-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-arm64 --arch=arm64"
     $NDK/build/tools/make-standalone-toolchain.sh --platform=android-9 --toolchain=aarch64-linux-android-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-arm64 --arch=arm64
 fi
 
 echo "exporting environment and compiler flags"
-
+exit 0;
 
 echo "building android arm64"
 echo "exporting environment and compiler flags"
@@ -360,7 +364,7 @@ echo "configure openssl for arm64"
 
 echo "building lib"
 
-PATH=$TOOLCHAIN_PATH:$PATH make depend
+#PATH=$TOOLCHAIN_PATH:$PATH make depend
 PATH=$TOOLCHAIN_PATH:$PATH make build_libs
 
 echo "moving lib"
