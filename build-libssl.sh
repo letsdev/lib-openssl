@@ -79,7 +79,6 @@ mkdir -p "${CURRENTPATH}/lib/android/libs/armeabi-v7a"
 mkdir -p "${CURRENTPATH}/lib/android/libs/x86"
 mkdir -p "${CURRENTPATH}/lib/android/libs/arm64-v8a"
 
-sh unpack.sh $VERSION $CURRENTPATH
 tar zxf "$CURRENTPATH/openssl-${VERSION}.tar.gz" -C "${CURRENTPATH}/src"
 cd "${CURRENTPATH}/src/openssl-${VERSION}"
 
