@@ -300,7 +300,7 @@ echo "configure openssl for x86"
 
 # IMPORTANT shared is necessary to have PIC code, if we only use "-DOPENSSL_PIC -fPIC" flags we still get text realocations in http within the cast.h of openssl.
 ./Configure shared android-x86
-make depend
+
 echo "building lib"
 PATH=$TOOLCHAIN_PATH:$PATH make depend
 PATH=$TOOLCHAIN_PATH:$PATH make build_libs
@@ -360,6 +360,7 @@ echo "configure openssl for arm64"
 
 echo "building lib"
 
+PATH=$TOOLCHAIN_PATH:$PATH make depend
 PATH=$TOOLCHAIN_PATH:$PATH make build_libs
 
 echo "moving lib"
