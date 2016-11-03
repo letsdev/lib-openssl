@@ -79,8 +79,10 @@ mkdir -p "${CURRENTPATH}/lib/android/libs/armeabi-v7a"
 mkdir -p "${CURRENTPATH}/lib/android/libs/x86"
 mkdir -p "${CURRENTPATH}/lib/android/libs/arm64-v8a"
 
-tar zxf openssl-${VERSION}.tar.gz -C "${CURRENTPATH}/src"
+sh unpack.sh $VERSION $CURRENTPATH
+tar zxf "$CURRENTPATH/openssl-${VERSION}.tar.gz" -C "${CURRENTPATH}/src"
 cd "${CURRENTPATH}/src/openssl-${VERSION}"
+
 for ARCH in ${ARCHS}
 do
 	if [[ "${ARCH}" == "i386" || "${ARCH}" == "x86_64" ]];
@@ -178,12 +180,6 @@ cp ${CURRENTPATH}/lib/ios/libcrypto.a ${CURRENTPATH}/lib/ios/Crypto.framework/cr
 echo "iOS Done."
 
 
-
-
-
-
-
-
 echo "starting android build"
 
 if [ ! -d "${ANDROID_NDK_HOME}" ]; then
@@ -200,7 +196,7 @@ if [ -d "${TOOLCHAIN_PATH}" ]; then
     echo "toolchain exists"
 else
     echo "toolchain missing, creat it"
-    $NDK/build/tools/make-standalone-toolchain.sh --platform=android-23 --toolchain=arm-linux-androideabi-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-arm
+    $NDK/build/tools/make-standalone-toolchain.sh --platform=android-9 --toolchain=arm-linux-androideabi-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-arm
 fi
 
 echo "exporting environment and compiler flags"
@@ -224,17 +220,17 @@ export LDFLAGS=" ${ARCH_LINK} "
 echo "configure openssl for armv7"
 
 ./Configure -DOPENSSL_PIC -fPIC android-armv7
-
+make depend
 echo "building lib"
 
-PATH=$TOOLCHAIN_PATH:$PATH make
+PATH=$TOOLCHAIN_PATH:$PATH make depend
+PATH=$TOOLCHAIN_PATH:$PATH make build_libs
 
 echo "moving lib"
 mv libcrypto.a ${CURRENTPATH}/lib/android/libs/armeabi-v7a/
 mv libssl.a ${CURRENTPATH}/lib/android/libs/armeabi-v7a/
 
-
-
+PATH=$TOOLCHAIN_PATH:$PATH make clean
 
 echo "building android arm"
 
@@ -261,14 +257,14 @@ echo "configure openssl for arm"
 ./Configure -DOPENSSL_PIC -fPIC android
 
 echo "building lib"
-
-PATH=$TOOLCHAIN_PATH:$PATH make
+PATH=$TOOLCHAIN_PATH:$PATH make depend
+PATH=$TOOLCHAIN_PATH:$PATH make build_libs
 
 echo "moving lib"
 mv libcrypto.a ${CURRENTPATH}/lib/android/libs/armeabi/
 mv libssl.a ${CURRENTPATH}/lib/android/libs/armeabi/
 
-
+PATH=$TOOLCHAIN_PATH:$PATH make clean
 
 echo "building android x86"
 echo "exporting android home and toolchain path"
@@ -300,19 +296,22 @@ export CXXFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstac
 export CFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 " 
 export LDFLAGS=" ${ARCH_LINK} " 
 
+
 echo "configure openssl for x86"
 
 # IMPORTANT shared is necessary to have PIC code, if we only use "-DOPENSSL_PIC -fPIC" flags we still get text realocations in http within the cast.h of openssl.
 ./Configure shared android-x86
-
+make depend
 echo "building lib"
-
+PATH=$TOOLCHAIN_PATH:$PATH make depend
 PATH=$TOOLCHAIN_PATH:$PATH make build_libs
 
 echo "moving lib"
 
 mv libcrypto.a ${CURRENTPATH}/lib/android/libs/x86/
 mv libssl.a ${CURRENTPATH}/lib/android/libs/x86/
+
+PATH=$TOOLCHAIN_PATH:$PATH make clean
 
 ############################################## arm64 ###################################################################
 
@@ -331,7 +330,7 @@ if [ -d "${TOOLCHAIN_PATH}" ]; then
     echo "toolchain exists"
 else
     echo "toolchain missing, creat it"
-    $NDK/build/tools/make-standalone-toolchain.sh --platform=android-23 --toolchain=aarch64-linux-android-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-arm64 --arch=arm64
+    $NDK/build/tools/make-standalone-toolchain.sh --platform=android-9 --toolchain=aarch64-linux-android-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-arm64 --arch=arm64
 fi
 
 echo "exporting environment and compiler flags"
@@ -369,8 +368,7 @@ echo "moving lib"
 mv libcrypto.a ${CURRENTPATH}/lib/android/libs/arm64-v8a/
 mv libssl.a ${CURRENTPATH}/lib/android/libs/arm64-v8a/
 
-
-
+PATH=$TOOLCHAIN_PATH:$PATH make clean
 
 echo "cleanig up temp directory"
 rm -rf "${CURRENTPATH}/src/openssl-${VERSION}"
