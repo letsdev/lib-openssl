@@ -38,6 +38,7 @@ ENABLE_EC_NISTP_64_GCC_128=""
 
 CURRENTPATH=`pwd`
 ARCHS="i386 x86_64 armv7 armv7s arm64"
+#ARCHS="i386 arm64"
 DEVELOPER=`xcode-select -print-path`
 MIN_SDK_VERSION="7.0"
 if [ ! -d "$DEVELOPER" ]; then
@@ -330,12 +331,15 @@ if [ -d "${TOOLCHAIN_PATH}" ]; then
     echo "toolchain exists"
 else
     echo "toolchain missing, creat it"
-    echo "$NDK/build/tools/make-standalone-toolchain.sh --platform=android-9 --toolchain=aarch64-linux-android-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-arm64 --arch=arm64"
-    $NDK/build/tools/make-standalone-toolchain.sh --platform=android-9 --toolchain=aarch64-linux-android-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-arm64 --arch=arm64
+    echo "$NDK/build/tools/make-standalone-toolchain.sh --platform=android-21 --toolchain=aarch64-linux-android-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-arm64 --arch=arm64"
+    #$NDK/build/tools/make-standalone-toolchain.sh --platform=android-9 --toolchain=aarch64-linux-android-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-arm64 --arch=arm64
+    $NDK/build/tools/make-standalone-toolchain.sh --platform=android-21 --toolchain=aarch64-linux-android-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-arm64 --arch=arm64
+
+
 fi
 
 echo "exporting environment and compiler flags"
-exit 0;
+#exit 0;
 
 echo "building android arm64"
 echo "exporting environment and compiler flags"
