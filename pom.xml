@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.letsdev.intern.openssl</groupId>
     <artifactId>Openssl-mobile</artifactId>
-    <version>1.0.2j</version>
+    <version>1.0.2l</version>
     
     <name>Open ssl for mobile (android and iOS)</name>
     
@@ -88,6 +88,9 @@
                         </goals>
                         <configuration>
                             <executable>${basedir}/build-libssl.sh</executable>
+                            <arguments>
+                                <argument>${project.version}</argument>
+                            </arguments>
                         </configuration>
                     </execution>
                 </executions>

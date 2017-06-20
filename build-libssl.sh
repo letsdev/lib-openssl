@@ -21,8 +21,8 @@
 ###########################################################################
 #  Change values here													  #
 #				
-VERSION="1.0.2j"													      #
-SDKVERSION=`xcrun -sdk iphoneos --show-sdk-version`														  #
+VERSION="$1"													      	  #
+SDKVERSION=`xcrun -sdk iphoneos --show-sdk-version`						  #
 CONFIG_OPTIONS=""
 CURL_OPTIONS=""
 
@@ -37,6 +37,7 @@ ENABLE_EC_NISTP_64_GCC_128=""
 
 
 CURRENTPATH=`pwd`
+#ARCHS="i386 x86_64 armv7 armv7s arm64"
 ARCHS="i386 x86_64 armv7 armv7s arm64"
 DEVELOPER=`xcode-select -print-path`
 MIN_SDK_VERSION="7.0"
@@ -105,11 +106,9 @@ do
 			;;
 		esac
 	fi
-	if [ "${SDKVERSION}" == "9.0" ]; then
-		export CC="${BUILD_TOOLS}/usr/bin/gcc -arch ${ARCH} -fembed-bitcode"
-	else
-		export CC="${BUILD_TOOLS}/usr/bin/gcc -arch ${ARCH}"
-	fi
+	
+	export CC="${BUILD_TOOLS}/usr/bin/gcc -arch ${ARCH} -fembed-bitcode"
+	
 	mkdir -p "${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk"
 	LOG="${CURRENTPATH}/bin/${PLATFORM}${SDKVERSION}-${ARCH}.sdk/build-openssl-${VERSION}.log"
 	set +e
@@ -126,7 +125,7 @@ do
     fi
 	# add -isysroot to CC=
 	sed -ie "s!^CFLAG=!CFLAG=-isysroot ${CROSS_TOP}/SDKs/${CROSS_SDK} -miphoneos-version-min=${MIN_SDK_VERSION} !" "Makefile"
-	if [ "$1" == "verbose" ];
+	if [ "$2" == "verbose" ];
 	then
 		if [[ ! -z $CONFIG_OPTIONS ]]; then
 			make depend
