@@ -194,7 +194,7 @@ if [ -d "${TOOLCHAIN_PATH}" ]; then
     echo "toolchain exists"
 else
     echo "toolchain missing, creat it"
-    $NDK/build/tools/make-standalone-toolchain.sh --platform=android-9 --toolchain=arm-linux-androideabi-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-arm
+    $NDK/build/tools/make-standalone-toolchain.sh --platform=android-16 --toolchain=arm-linux-androideabi-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-arm
 fi
 
 echo "exporting environment and compiler flags"
@@ -272,7 +272,7 @@ if [ -d "${TOOLCHAIN_PATH}" ]; then
     echo "toolchain exists"
 else
     echo "toolchain missing, creat it"
-    $NDK/build/tools/make-standalone-toolchain.sh --platform=android-9 --toolchain=x86-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-x86
+    $NDK/build/tools/make-standalone-toolchain.sh --platform=android-16 --toolchain=x86-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-x86
 fi
 
 echo "exporting environment and compiler flags"
@@ -297,7 +297,7 @@ export LDFLAGS=" ${ARCH_LINK} "
 echo "configure openssl for x86"
 
 # IMPORTANT shared is necessary to have PIC code, if we only use "-DOPENSSL_PIC -fPIC" flags we still get text realocations in http within the cast.h of openssl.
-./Configure shared android-x86
+./Configure no-asm -DOPENSSL_PIC -fPIC android-x86
 
 echo "building lib"
 
