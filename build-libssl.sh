@@ -83,6 +83,16 @@ mkdir -p "${CURRENTPATH}/lib/android/libs/arm64-v8a"
 tar zxf "$CURRENTPATH/openssl-${VERSION}.tar.gz" -C "${CURRENTPATH}/src"
 cd "${CURRENTPATH}/src/openssl-${VERSION}"
 
+log_title() {
+	echo '##########################################################################'
+	echo "$1"
+	echo '##########################################################################'
+}
+
+# ##########################################################################
+# IOS BUILD
+# ##########################################################################
+
 for ARCH in ${ARCHS}
 do
 	if [[ "${ARCH}" == "i386" || "${ARCH}" == "x86_64" ]];
@@ -176,16 +186,20 @@ cp ${CURRENTPATH}/lib/ios/libcrypto.a ${CURRENTPATH}/lib/ios/Openssl.framework/c
 cp ${CURRENTPATH}/lib/ios/libcrypto.a ${CURRENTPATH}/lib/ios/Crypto.framework/crypto
 
 echo "iOS Done."
+# ##########################################################################
+# ANDROID BUILD
+# ##########################################################################
 
-
-echo "starting android build"
+log_title "starting android build"
 
 if [ ! -d "${ANDROID_NDK_HOME}" ]; then
   echo "ANDROID_NDK_HOME not defined or directory does not exist"
   exit 1
 fi
 
-echo "building android armv7"
+################################## armv7 ###################################
+
+log_title "building android armv7"
 echo "exporting android home and toolchain path"
 export NDK=$ANDROID_NDK_HOME 
 export TOOLCHAIN_PATH=${CURRENTPATH}/bin/android-toolchain-arm/bin 
@@ -193,7 +207,7 @@ export TOOLCHAIN_PATH=${CURRENTPATH}/bin/android-toolchain-arm/bin
 if [ -d "${TOOLCHAIN_PATH}" ]; then
     echo "toolchain exists"
 else
-    echo "toolchain missing, creat it"
+    echo "toolchain missing, create it"
     $NDK/build/tools/make-standalone-toolchain.sh --platform=android-16 --toolchain=arm-linux-androideabi-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-arm
 fi
 
@@ -263,7 +277,9 @@ mv libssl.a ${CURRENTPATH}/lib/android/libs/armeabi/
 
 PATH=$TOOLCHAIN_PATH:$PATH make clean
 
-echo "building android x86"
+################################### x86 ####################################
+
+log_title "building android x86"
 echo "exporting android home and toolchain path"
 export NDK=$ANDROID_NDK_HOME 
 export TOOLCHAIN_PATH=${CURRENTPATH}/bin/android-toolchain-x86/bin
@@ -271,7 +287,7 @@ export TOOLCHAIN_PATH=${CURRENTPATH}/bin/android-toolchain-x86/bin
 if [ -d "${TOOLCHAIN_PATH}" ]; then
     echo "toolchain exists"
 else
-    echo "toolchain missing, creat it"
+    echo "toolchain missing, create it"
     $NDK/build/tools/make-standalone-toolchain.sh --platform=android-16 --toolchain=x86-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-x86
 fi
 
@@ -310,9 +326,9 @@ mv libssl.a ${CURRENTPATH}/lib/android/libs/x86/
 
 PATH=$TOOLCHAIN_PATH:$PATH make clean
 
-############################################## arm64 ###################################################################
+################################## arm64 ###################################
 
-echo "starting android arm64 build"
+log_title "starting android arm64 build"
 
 if [ ! -d "${ANDROID_NDK_HOME}" ]; then
   echo "ANDROID_NDK_HOME not defined or directory does not exist"
@@ -326,7 +342,7 @@ export TOOLCHAIN_PATH=${CURRENTPATH}/bin/android-toolchain-arm64
 if [ -d "${TOOLCHAIN_PATH}" ]; then
     echo "toolchain exists"
 else
-    echo "toolchain missing, creat it"
+    echo "toolchain missing, create it"
     echo "$NDK/build/tools/make-standalone-toolchain.sh --platform=android-21 --toolchain=aarch64-linux-android-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-arm64 --arch=arm64"
     $NDK/build/tools/make-standalone-toolchain.sh --platform=android-21 --toolchain=aarch64-linux-android-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-arm64 --arch=arm64
 
@@ -369,7 +385,70 @@ mv libssl.a ${CURRENTPATH}/lib/android/libs/arm64-v8a/
 
 PATH=$TOOLCHAIN_PATH:$PATH make clean
 
-echo "cleanig up temp directory"
+################################# x86_64 ###################################
+
+log_title "starting android x86_64 build"
+
+if [ ! -d "${ANDROID_NDK_HOME}" ]; then
+  echo "ANDROID_NDK_HOME not defined or directory does not exist"
+  exit 1
+fi
+
+echo "exporting android home and toolchain path"
+export NDK=$ANDROID_NDK_HOME 
+export TOOLCHAIN_PATH=${CURRENTPATH}/bin/android-toolchain-x86_64
+
+if [ -d "${TOOLCHAIN_PATH}" ]; then
+    echo "toolchain exists"
+else
+    echo "toolchain missing, create it"
+    echo "$NDK/build/tools/make-standalone-toolchain.sh --platform=android-21 --toolchain=x86_64-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-x86_64 --arch=x86_64"
+    $NDK/build/tools/make-standalone-toolchain.sh --platform=android-21 --toolchain=x86_64-4.9 --install-dir=${CURRENTPATH}/bin/android-toolchain-x86_64 --arch=x86_64
+
+
+fi
+
+echo "exporting environment and compiler flags"
+
+echo "building android x86_64"
+echo "exporting environment and compiler flags"
+
+export TOOL=bin/x86_64-linux-android
+export NDK_TOOLCHAIN_BASENAME=${TOOLCHAIN_PATH}/${TOOL} 
+export CC=$NDK_TOOLCHAIN_BASENAME-gcc 
+export CXX=$NDK_TOOLCHAIN_BASENAME-g++ 
+export LINK=${CXX} 
+export LD=$NDK_TOOLCHAIN_BASENAME-ld 
+export AR=$NDK_TOOLCHAIN_BASENAME-ar 
+export RANLIB=$NDK_TOOLCHAIN_BASENAME-ranlib 
+export STRIP=$NDK_TOOLCHAIN_BASENAME-strip 
+export ARCH_FLAGS= 
+export ARCH_LINK= 
+export CPPFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 " 
+export CXXFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 -frtti -fexceptions " 
+export CFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 " 
+export LDFLAGS=" ${ARCH_LINK} "
+
+echo "configure openssl for x86_64"
+
+./Configure -DOPENSSL_PIC -fPIC android
+
+echo "building lib"
+
+PATH=$TOOLCHAIN_PATH:$PATH make build_libs
+
+echo "moving lib"
+
+mv libcrypto.a ${CURRENTPATH}/lib/android/libs/x86_64/
+mv libssl.a ${CURRENTPATH}/lib/android/libs/x86_64/
+
+PATH=$TOOLCHAIN_PATH:$PATH make clean
+
+# ##########################################################################
+# CLEAN UP
+# ##########################################################################
+
+log_title "cleanig up temp directory"
 rm -rf "${CURRENTPATH}/src/openssl-${VERSION}"
 
 echo "clear export flags"
