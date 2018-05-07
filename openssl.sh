@@ -51,7 +51,7 @@ OPENSSL_PATH="$FILES_DIR/$OPENSSL_FILE"
 ## Main
 ## --------------------
 
-_unarchive() {
+function unarchive() {
 	# Expand source tree if needed
 	if [ ! -d "$SRC_DIR" ]; then
 		echo "Unarchive sources for $PLATFORM-$ARCH..."
@@ -59,19 +59,19 @@ _unarchive() {
 	fi
 }
 
-_configure() {
+function configure() {
 	# Configure
 	echo "Configuring $PLATFORM-$ARCH..."
 	(cd "$SRC_DIR"; CROSS_TOP="$CROSS_TOP" CROSS_SDK="$CROSS_SDK" CC="$CC" ./Configure --prefix="$DST_DIR" -no-apps "$COMPILER" > "$LOG_FILE" 2>&1)
 }
 
-_build() {
+function build() {
 	# Build
 	echo "Building $PLATFORM-$ARCH..."
 	(cd "$SRC_DIR"; CROSS_TOP="$CROSS_TOP" CROSS_SDK="$CROSS_SDK" CC="$CC" make >> "$LOG_FILE" 2>&1)
 }
 
-build_ios() {
+function build_ios() {
 	for ARCH in $IOS_ARCHS; do
 		PLATFORM="iPhoneOS"
 		COMPILER="iphoneos-cross"
@@ -90,8 +90,8 @@ build_ios() {
 
 		# indicate new build 
 		echo ">>>"
-		_unarchive
-		_configure
+		unarchive
+		configure
 
 		# Patch Makefile
 		if [ "$ARCH" == "x86_64" ]; then
@@ -103,11 +103,11 @@ build_ios() {
 		#sed -ie "s/^# define OPENSSL_VERSION_NUMBER.*$/# define OPENSSL_VERSION_NUMBER  $FAKE_NIBBLE/" "$SRC_DIR/crypto/opensslv.h"
 		#sed -ie "s/^#  define OPENSSL_VERSION_TEXT.*$/#  define OPENSSL_VERSION_TEXT  \"$FAKE_TEXT\"/" "$SRC_DIR/crypto/opensslv.h"
 
-		_build
+		build
 	done
 }
 
-distribute_ios() {
+function distribute_ios() {
 	PLATFORM="iOS"
 	NAME="$OPENSSL_NAME-$PLATFORM"
 	DIR="$DIST_DIR/$NAME"
