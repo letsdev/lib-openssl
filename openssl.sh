@@ -13,9 +13,15 @@
 ## Parameters
 ## --------------------
 
-VERSION=1.0.2o
+VERSION=$1
 IOS_SDK=11.2
+MIN_IOS=7.0
 IOS_ARCHS="i386 x86_64 armv7 armv7s arm64"
+
+if [ -z $VERSION ]; then
+	echo "Missing VERSION as first parameter"
+	exit 99
+fi
 
 ## --------------------
 ## Variables
@@ -74,22 +80,16 @@ build_ios() {
 		LOG_FILE="$SRC_DIR/$PLATFORM$IOS_SDK-$ARCH.log"
 
 		# Select the compiler
-		if [ "$ARCH" == "i386" ]; then
+		if [[ "$ARCH" == "i386" || "$ARCH" == "x86_64" ]]; then
 			PLATFORM="iPhoneSimulator"
-			MIN_IOS="4.2"
-		elif [ "$ARCH" == "x86_64" ]; then
-			PLATFORM="iPhoneSimulator"
-			MIN_IOS="7.0"
-		elif [ "$ARCH" == "arm64" ]; then
-			MIN_IOS="7.0"
-		else
-			MIN_IOS="6.0"
 		fi
 
 		CROSS_TOP="$DEVELOPER_DIR/Platforms/$PLATFORM.platform/Developer"
 		CROSS_SDK="$PLATFORM$IOS_SDK.sdk"
 		CC="clang -arch $ARCH -fembed-bitcode"
 
+		# indicate new build 
+		echo ">>>"
 		_unarchive
 		_configure
 
@@ -142,6 +142,9 @@ mkdir -p "$FILES_DIR"
 if [ ! -e "$OPENSSL_PATH" ]; then
 	curl -L "$OPENSSL_URL" -o "$OPENSSL_PATH"
 fi
+
+echo "Using iOS SDK ${IOS_SDK}"
+echo "Using iOS min version ${MIN_IOS}"
 
 build_ios
 distribute_ios
