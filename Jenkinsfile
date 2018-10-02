@@ -32,6 +32,7 @@ node('docker') {
                 node('ios') {
                     deleteDir()
                     checkout scm
+                    sh 'chmod a+x ./*.sh'
                     sh './build-ios.sh'
                     sh 'mvn deploy -Dclassifier=ios'
                 }
