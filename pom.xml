@@ -60,40 +60,16 @@
                 <configuration>
                     <filesets>
                         <fileset>
-                            <directory>bin</directory>
+                            <directory>build</directory>
                         </fileset>
                         <fileset>
-                            <directory>src</directory>
+                            <directory>dist</directory>
                         </fileset>
                         <fileset>
-                            <directory>include</directory>
-                        </fileset>
-                        <fileset>
-                            <directory>lib</directory>
+                            <directory>files</directory>
                         </fileset>
                     </filesets>
                 </configuration>
-            </plugin>
-
-            <plugin>
-                <artifactId>exec-maven-plugin</artifactId>
-                <groupId>org.codehaus.mojo</groupId>
-                <executions>
-                    <!-- Run lib build script -->
-                    <execution>
-                        <id>Create openssl bin</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>${basedir}/build-libssl.sh</executable>
-                            <arguments>
-                                <argument>${project.version}</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
 
             <plugin>
