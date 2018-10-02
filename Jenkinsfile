@@ -19,14 +19,14 @@ node('docker') {
         
     parallel(
         failFast: true,
-        android: {
+        /*android: {
             stage('android') {  
                 dockerImage.inside(options) {
                     sh build-android.sh
                     sh 'mvn deploy -Dclassifier=android'
                 }
             }
-        },
+        },*/
         ios: {
             stage('ios') {
                 node('ios') {
