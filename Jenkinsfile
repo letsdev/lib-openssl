@@ -16,7 +16,9 @@ node('docker') {
     -v $HOME/.gitconfig:/home/build/.gitconfig
     -v $HOME/ld-config:/home/build/ld-config
     """
-        
+    def pom = readMavenPom file: 'pom.xml'
+    def VERSION = pom.version
+
     parallel(
         failFast: true,
         /*android: {
@@ -33,7 +35,7 @@ node('docker') {
                     deleteDir()
                     checkout scm
                     sh 'chmod a+x ./*.sh'
-                    sh './build-ios.sh'
+                    sh "./build-ios.sh ${VERSION}"
                     sh 'mvn deploy -Dclassifier=ios'
                 }
             }
@@ -43,6 +45,6 @@ node('docker') {
     stage('tag') {
         def pom = readMavenPom file: 'pom.xml'
         de.letsdev.git.LdGit ldGit = new de.letsdev.git.LdGit()
-        ldGit.pushTag(pom.version)
+        ldGit.pushTag(VERSION)
     }
 }
