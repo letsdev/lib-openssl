@@ -43,7 +43,6 @@ node('docker') {
     )
 
     stage('tag') {
-        def pom = readMavenPom file: 'pom.xml'
         de.letsdev.git.LdGit ldGit = new de.letsdev.git.LdGit()
         ldGit.pushTag(VERSION)
     }
