@@ -6,7 +6,10 @@ matrix:
         - docker
     - os: osx
       osx_image: xcode10
-     
+
+env: 
+  - RELEASE_FILES=$TRAVIS_BUILD_DIR/target/*.zip
+
 before_install:
   - export TRAVIS_TAG=`mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec`
   - echo $TRAVIS_TAG
@@ -21,13 +24,31 @@ script:
   - |
     if [ $TRAVIS_OS_NAME == "linux" ]; then
       docker exec --user build openssl-container bash /home/build/app/build-android.sh $TRAVIS_TAG
-    fi
-  - |
-    if [ $TRAVIS_OS_NAME == "osx" ]; then
+    else
       bash ./build-ios.sh $TRAVIS_TAG
     fi
+  - |
+    if [ $TRAVIS_OS_NAME == "linux" ]; then
+      mvn package -P android
+    else
+      mvn package -P ios
+    fi
+
   
 before_deploy:
   - git config --local user.name "cwack"
   - git config --local user.email "christian.wack@letsdev.de"
+  - echo "List release files"
+  - ls $RELEASE_FILES
 
+deploy:
+  provider: releases
+  api_key:
+    secure: "YaRLBvXCW3V+HEuk6n/gJlXOMXEGLGYvNFaKawboLcTJEOtvn0ur72hzXHJRYWC2JGNgPdLxl8f9AHGt3pgU5JpCgDm/zxpUx6lrKAKwnSD+WKNeE9n0HIKhzskd5tsaFPWN0njkoZocUAyNuuePslYj+QCUvlV0U1B1xGKICkxYSyRD2rBKSan7XpMW0PP45O2EhSkcnodx2nJjZqSuP3ErF5OLt2qfEORzVX/KmohmAJUZnefsg+v50Y76746QEmPDuhfAXa/ETGPkZt31a0AqlOcLAdgFmhX9RC3Piv7jRjb81kE4uRlkRg7acMvQmqtFeT6NoFP4bBLKIepNDCqNvaSEd9NLwiygXHeu3j3qhxSk3a8jZmiIt+DUENDKTiRwj4+GMFwmW7rgKZ2ZVo6btTfyv0cy3cCtfsheZurnclH2OFRsdxc1Ps+gnjfX4vZhtbAkG0ROBtuhfe3TnyJEXkzHeVhmYCmsbhc7MF7oy7cvWLsyszGuwGI31wYVqSCuxQcob4rMSN1wCSuA9PrDmFoa7VYeMmJlvJdy7J1qcNlZpE/kGzJJW5MezMO/YyCS/VxNudq29xqUkQ3RFc2QemNMtqLeb63F6WeIbrG7UTSPO8vubUklwCTEt1glf2o6nx4hGOYyFkotx+NXchlh4Pt8Vf0IX529APmNw4o="
+  file_glob: true
+  tag_name: $TRAVIS_TAG
+  file: $RELEASE_FILES
+  name: Release-$TRAVIS_TAG
+  skip_cleanup: true
+  on:
+    branch: split
