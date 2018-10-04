@@ -1,11 +1,6 @@
-os: 
-  - linux
-  - osx
-
 matrix:
   include:
     - os: linux
-      dist: trusty
       sudo: required
       services:
         - docker
