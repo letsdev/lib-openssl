@@ -121,17 +121,17 @@ function distribute_ios() {
  	mkdir -p $FRAMEWORK_DIR/Ssl.framework/Headers
 	mkdir -p $FRAMEWORK_DIR/Crypto.framework
 
-	copy -LR $DIR/include/openssl/ $FRAMEWORK_DIR/Openssl.framework/Headers/
-	copy -LR $DIR/include/openssl/ $FRAMEWORK_DIR/Ssl.framework/Headers/
+	cp -LR $DIR/include/openssl/ $FRAMEWORK_DIR/Openssl.framework/Headers/
+	cp -LR $DIR/include/openssl/ $FRAMEWORK_DIR/Ssl.framework/Headers/
 
-	copy $DIR/lib/libssl.a $FRAMEWORK_DIR/Openssl.framework/ssl
-	copy $DIR/lib/libssl.a $FRAMEWORK_DIR/Ssl.framework/ssl
-	copy $DIR/lib/libcrypto.a $FRAMEWORK_DIR/Openssl.framework/crypto
-	copy $DIR/lib/libcrypto.a $FRAMEWORK_DIR/Crypto.framework/crypto
+	copy "$DIR/lib/libssl.a" "$FRAMEWORK_DIR/Openssl.framework/ssl"
+	copy "$DIR/lib/libssl.a" "$FRAMEWORK_DIR/Ssl.framework/ssl"
+	copy "$DIR/lib/libcrypto.a" "$FRAMEWORK_DIR/Openssl.framework/crypto"
+	copy "$DIR/lib/libcrypto.a" "$FRAMEWORK_DIR/Crypto.framework/crypto"
 }
 
 function copy() {
-    echo "Copy >> $1 >> $2"
+    echo "Copy $1 => $2"
     cp $1 $2
 }
 
