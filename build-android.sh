@@ -115,7 +115,7 @@ function build_android_arch {
 	(cd "$SRC_DIR"; make build_libs >> "$LOG_FILE" 2>&1)
 
 	clear_android_env
-    check_files $ABI
+    check_files $ABI $LOG_FILE
     echo "Finished: $(date)"
 }
 
@@ -141,12 +141,15 @@ function check_files() {
     local FILE_CRYPTO=$BUILD_DIR/android-$1/libcrypto.a
     if [ ! -f $FILE_SSL ]; then
         echo "Missing $FILE_SSL"
+        cat $2
         exit 1
     fi
     if [ ! -f $FILE_CRYPTO ]; then
         echo "Missing $FILE_CRYPTO"
+        cat $2
         exit 2
     fi
+    echo "$1 successful"
 }
 
 function distribute_android {
@@ -156,16 +159,17 @@ function distribute_android {
     local PLATFORM="Android"
     local NAME="$OPENSSL_NAME-$PLATFORM"
     local DIR="$DIST_DIR/$NAME/openssl"
-	local ANDROID_ABIS="armeabi-v7a"
+	local ANDROID_ABIS="arm64-v8a armeabi-v7a armeabi x86 x86_64"
 	
 	for ABI in $ANDROID_ABIS; do
 		local ABI_DIR=$DIR/$ABI
     	mkdir -p $ABI_DIR/include
     	mkdir -p $ABI_DIR/lib
 
+        echo "Copy $ABI"
 		cp -LR $BUILD_DIR/android-$ABI/include/* $ABI_DIR/include
-		cp -LR $BUILD_DIR/android-$ABI/libcrypto.a $ABI_DIR/lib
-		cp -LR $BUILD_DIR/android-$ABI/libssl.a $ABI_DIR/lib
+		cp $BUILD_DIR/android-$ABI/libcrypto.a $ABI_DIR/lib/libcrypto.a
+		cp $BUILD_DIR/android-$ABI/libssl.a $ABI_DIR/lib/libssl.a
     done
 }
 
@@ -174,4 +178,4 @@ function distribute_android {
 ## --------------------
 clear_android_env
 build_android
-#distribute_android
+distribute_android
