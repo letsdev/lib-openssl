@@ -1,12 +1,12 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.letsdev.intern.openssl</groupId>
     <artifactId>Openssl-mobile</artifactId>
     <version>1.0.2o</version>
-    
+
     <name>Open ssl for mobile (android and iOS)</name>
-    
+
     <scm>
         <url>http://dev1/gitlab/ld/lib-openssl</url>
         <connection>scm:git:git://dev1:ld/lib-openssl.git</connection>
@@ -38,10 +38,66 @@
         </developer>
     </developers>
 
+    <profiles>
+        <profile>
+            <id>ios</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <version>2.2-beta-5</version>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>ssl.xml</descriptor>
+                                <descriptor>openssl.xml</descriptor>
+                                <descriptor>crypto.xml</descriptor>
+                                <descriptor>openssl-cpp.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>make-assembly</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>android</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <version>2.2-beta-5</version>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>android.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>make-assembly</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <distributionManagement>
         <snapshotRepository>
             <id>snapshots</id>
-            <name>Snapshots Intern</name> <!-- deploy snapshot versions only intern -->
+            <name>Snapshots Intern</name>            <!-- deploy snapshot versions only intern -->
             <url>${snapshots.url}</url>
         </snapshotRepository>
         <repository>
@@ -71,34 +127,6 @@
                     </filesets>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.2-beta-5</version>
-                <configuration>
-                    <descriptors>
-                        <descriptor>ssl.xml</descriptor>
-                        <descriptor>openssl.xml</descriptor>
-                        <descriptor>crypto.xml</descriptor>
-                        <descriptor>android.xml</descriptor>
-                    </descriptors>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
-                        <phase>package</phase> <!-- append to the packaging phase. -->
-                        <goals>
-                            <goal>single</goal> <!-- goals == mojos -->
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
-    <dependencies>
-
-    </dependencies>
-    
-    
-    
 </project>

@@ -157,7 +157,7 @@ function distribute_android {
 	echo "Distribute Android"
 
     local PLATFORM="Android"
-    local NAME="$OPENSSL_NAME-$PLATFORM"
+    local NAME="$PLATFORM"
     local DIR="$DIST_DIR/$NAME/openssl"
 	local ANDROID_ABIS="arm64-v8a armeabi-v7a armeabi x86 x86_64"
 	

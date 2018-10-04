@@ -89,7 +89,7 @@ function distribute_ios() {
 	echo "Distribute iOS"
 
     local PLATFORM="iOS"
-    local NAME="$OPENSSL_NAME-$PLATFORM"
+    local NAME="$PLATFORM"
     local DIR="$DIST_DIR/$NAME/openssl"
     local FILES="libcrypto.a libssl.a"
     mkdir -p "$DIR/include"
