@@ -30,7 +30,7 @@ script:
     fi
   - |
     if [ $TRAVIS_OS_NAME == "osx" ]; then
-      bash ./build-android.sh $TRAVIS_TAG
+      bash ./build-ios.sh $TRAVIS_TAG
     fi
   
 before_deploy:
