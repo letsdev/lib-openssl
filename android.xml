@@ -7,15 +7,8 @@
   <includeBaseDirectory>false</includeBaseDirectory>
   <fileSets>
     <fileSet>
-      <directory>${basedir}/dist/android/libs/</directory>
-      <outputDirectory>/libs/</outputDirectory>
-      <includes>
-        <include>**/*</include>
-      </includes>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/include/</directory>
-      <outputDirectory>/include/</outputDirectory>
+      <directory>${basedir}/dist/Android/</directory>
+      <outputDirectory>/</outputDirectory>
       <includes>
         <include>**/*</include>
       </includes>
