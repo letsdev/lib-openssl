@@ -51,7 +51,6 @@
                                 <descriptor>ssl.xml</descriptor>
                                 <descriptor>openssl.xml</descriptor>
                                 <descriptor>crypto.xml</descriptor>
-                                <descriptor>openssl-cpp.xml</descriptor>
                             </descriptors>
                         </configuration>
                         <executions>
