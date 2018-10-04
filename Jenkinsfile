@@ -24,6 +24,7 @@ node('docker') {
         android: {
             stage('android') {  
                 dockerImage.inside(options) {
+                    sh 'chmod a+x ./*.sh'
                     sh "./build-android.sh ${VERSION}"
                     sh 'mvn deploy -P android'
                 }
