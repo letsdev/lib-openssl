@@ -102,14 +102,17 @@ function distribute_ios() {
     # Alter rsa.h to make Swift happy
     sed -i .bak 's/const BIGNUM \*I/const BIGNUM *i/g' "$DIR/include/openssl/rsa.h"
     
+    echo "Combine library files"
     for f in $FILES; do
+        local OUTPUT_FILE=$DIR/lib/$f
         lipo -create \
         "$BUILD_DIR/iPhoneSimulator-i386/$f" \
         "$BUILD_DIR/iPhoneSimulator-x86_64/$f" \
         "$BUILD_DIR/iPhoneOS-arm64/$f" \
         "$BUILD_DIR/iPhoneOS-armv7/$f" \
         "$BUILD_DIR/iPhoneOS-armv7s/$f" \
-        -output "$DIR/lib/$f"
+        -output $OUTPUT_FILE
+        echo "Created $OUTPUT_FILE"
     done
 
 	echo "Create iOS-Framework"
@@ -118,13 +121,18 @@ function distribute_ios() {
  	mkdir -p $FRAMEWORK_DIR/Ssl.framework/Headers
 	mkdir -p $FRAMEWORK_DIR/Crypto.framework
 
-	cp -LR $DIR/include/openssl/ $FRAMEWORK_DIR/Openssl.framework/Headers/
-	cp -LR $DIR/include/openssl/ $FRAMEWORK_DIR/Ssl.framework/Headers/
+	copy -LR $DIR/include/openssl/ $FRAMEWORK_DIR/Openssl.framework/Headers/
+	copy -LR $DIR/include/openssl/ $FRAMEWORK_DIR/Ssl.framework/Headers/
 
-	cp $DIR/lib/libssl.a $FRAMEWORK_DIR/Openssl.framework/ssl
-	cp $DIR/lib/libssl.a $FRAMEWORK_DIR/Ssl.framework/ssl
-	cp $DIR/lib/libcrypto.a $FRAMEWORK_DIR/Openssl.framework/crypto
-	cp $DIR/lib/libcrypto.a $FRAMEWORK_DIR/Crypto.framework/crypto
+	copy $DIR/lib/libssl.a $FRAMEWORK_DIR/Openssl.framework/ssl
+	copy $DIR/lib/libssl.a $FRAMEWORK_DIR/Ssl.framework/ssl
+	copy $DIR/lib/libcrypto.a $FRAMEWORK_DIR/Openssl.framework/crypto
+	copy $DIR/lib/libcrypto.a $FRAMEWORK_DIR/Crypto.framework/crypto
+}
+
+function copy() {
+    echo "Copy >> $1 >> $2"
+    cp $1 $2
 }
 
 ## --------------------
