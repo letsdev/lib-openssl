@@ -1,0 +1,32 @@
+os: 
+  - linux
+  - osx
+
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: required
+      services:
+        - docker
+      addons:
+        apt:
+        update: true
+        packages:
+          - oracle-java8-set-default
+          - maven
+    - os: osx
+      osx_image: xcode10
+     
+before_install:
+  - export TRAVIS_TAG=`mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec`
+  - echo $TRAVIS_TAG
+  - mkdir $TRAVIS_BUILD_DIR/dist && chmod a+w $TRAVIS_BUILD_DIR/dist
+  
+script:
+  - bash ./build-ios.sh $TRAVIS_TAG
+  
+before_deploy:
+  - git config --local user.name "cwack"
+  - git config --local user.email "christian.wack@letsdev.de"
+
