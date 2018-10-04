@@ -21,7 +21,6 @@ matrix:
 before_install:
   - export TRAVIS_TAG=`mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec`
   - echo $TRAVIS_TAG
-  - mkdir $TRAVIS_BUILD_DIR/dist && chmod a+w $TRAVIS_BUILD_DIR/dist
   
 script:
   - bash ./build-ios.sh $TRAVIS_TAG
