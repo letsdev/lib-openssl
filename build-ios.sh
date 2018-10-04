@@ -44,6 +44,7 @@ function build_ios() {
 	echo "Using iOS min version ${MIN_IOS}"
     
 	for ARCH in $IOS_ARCHS; do
+        log_title "$ARCH"
         local PLATFORM="iPhoneOS"
         local COMPILER="iphoneos-cross"
 
@@ -85,8 +86,7 @@ function build_ios() {
 }
 
 function distribute_ios() {
-    echo ">>>"
-	echo "Distribute iOS"
+    log_title "Distribute iOS"
 
     local PLATFORM="iOS"
     local NAME="$PLATFORM"

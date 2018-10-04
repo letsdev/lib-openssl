@@ -49,6 +49,7 @@ function clear_android_env {
 }
 
 function build_android_arch {
+    log_title "$1"
     if [ -z $1 ]; then
         echo 'no ABI set'
         exit 1
@@ -153,8 +154,7 @@ function check_files() {
 }
 
 function distribute_android {
-    echo ">>>"
-	echo "Distribute Android"
+    log_title "Distribute Android"
 
     local PLATFORM="Android"
     local NAME="$PLATFORM"
