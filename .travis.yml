@@ -16,9 +16,22 @@ matrix:
 before_install:
   - export TRAVIS_TAG=`mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec`
   - echo $TRAVIS_TAG
+  - |
+    if [ $TRAVIS_OS_NAME == "linux" ]; then
+      mkdir $TRAVIS_BUILD_DIR/dist && chmod a+w $TRAVIS_BUILD_DIR/dist
+      docker build -t android-openssl .
+      docker run -it -d --user build --name openssl-container -v $TRAVIS_BUILD_DIR/dist:/home/build/app/dist -e TRAVIS_TAG=$TRAVIS_TAG android-openssl bash
+    fi
   
 script:
-  - bash ./build-ios.sh $TRAVIS_TAG
+  - |
+    if [ $TRAVIS_OS_NAME == "linux" ]; then
+      bash ./build-android.sh $TRAVIS_TAG
+    fi
+  - |
+    if [ $TRAVIS_OS_NAME == "osx" ]; then
+      bash ./build-android.sh $TRAVIS_TAG
+    fi
   
 before_deploy:
   - git config --local user.name "cwack"
