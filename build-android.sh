@@ -115,6 +115,7 @@ function build_android_arch {
 	(cd "$SRC_DIR"; make build_libs >> "$LOG_FILE" 2>&1)
 
 	clear_android_env
+    check_files $ABI
     echo "Finished: $(date)"
 }
 
@@ -128,11 +129,24 @@ function build_android {
 	local ARM_ARCH_FLAGS="-mthumb"
 
 	# abi, arch, toolchain, openssl-config, arch_flags, arch_link
-	#build_android_arch 'arm64-v8a' 'arm64' 'aarch64-linux-android' 'android' || exit 1
-	#build_android_arch 'armeabi-v7a' 'arm' 'arm-linux-androideabi' 'android-armv7' $ARMV7_ARCH_FLAGS $ARMV7_ARCH_LINK || exit 2
-	#build_android_arch 'armeabi' 'arm' 'arm-linux-androideabi' 'android' $ARM_ARCH_FLAGS || exit 3
-	#build_android_arch 'x86' 'x86' 'i686-linux-android' 'android-x86' $X86_ARCH_FLAGS || exit 4
-	build_android_arch 'x86_64' 'x86_64' 'x86_64-linux-android' 'android' || exit 5
+	build_android_arch 'arm64-v8a' 'arm64' 'aarch64-linux-android' 'android'
+	build_android_arch 'armeabi-v7a' 'arm' 'arm-linux-androideabi' 'android-armv7' $ARMV7_ARCH_FLAGS $ARMV7_ARCH_LINK
+	build_android_arch 'armeabi' 'arm' 'arm-linux-androideabi' 'android' $ARM_ARCH_FLAGS
+	build_android_arch 'x86' 'x86' 'i686-linux-android' 'android-x86' $X86_ARCH_FLAGS
+	build_android_arch 'x86_64' 'x86_64' 'x86_64-linux-android' 'android'
+}
+
+function check_files() {
+    local FILE_SSL=$BUILD_DIR/android-$1/libssl.a
+    local FILE_CRYPTO=$BUILD_DIR/android-$1/libcrypto.a
+    if [ ! -f $FILE_SSL ]; then
+        echo "Missing $FILE_SSL"
+        exit 1
+    fi
+    if [ ! -f $FILE_CRYPTO ]; then
+        echo "Missing $FILE_CRYPTO"
+        exit 2
+    fi
 }
 
 function distribute_android {

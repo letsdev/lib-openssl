@@ -4,12 +4,6 @@ matrix:
       sudo: required
       services:
         - docker
-      addons:
-        apt:
-        update: true
-        packages:
-          - oracle-java8-set-default
-          - maven
     - os: osx
       osx_image: xcode10
      
@@ -26,7 +20,7 @@ before_install:
 script:
   - |
     if [ $TRAVIS_OS_NAME == "linux" ]; then
-      bash ./build-android.sh $TRAVIS_TAG
+      docker exec --user build openssl-container bash /home/build/app/build-android.sh $TRAVIS_TAG
     fi
   - |
     if [ $TRAVIS_OS_NAME == "osx" ]; then
