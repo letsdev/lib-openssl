@@ -21,14 +21,14 @@ node('docker') {
 
     parallel(
         failFast: true,
-        /*android: {
+        android: {
             stage('android') {  
                 dockerImage.inside(options) {
                     sh build-android.sh
-                    sh 'mvn deploy -Dclassifier=android'
+                    sh 'mvn deploy -P android'
                 }
             }
-        },*/
+        },
         ios: {
             stage('ios') {
                 node('ios') {
@@ -36,7 +36,7 @@ node('docker') {
                     checkout scm
                     sh 'chmod a+x ./*.sh'
                     sh "./build-ios.sh ${VERSION}"
-                    sh 'mvn deploy -Dclassifier=ios'
+                    sh 'mvn deploy -P ios'
                 }
             }
         }
