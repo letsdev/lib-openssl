@@ -5,7 +5,7 @@ matrix:
       services:
         - docker
     - os: osx
-      osx_image: xcode9.4
+      osx_image: xcode10.0
 
 env: 
   - RELEASE_FILES=$TRAVIS_BUILD_DIR/target/*.zip
@@ -46,9 +46,9 @@ deploy:
   api_key:
     secure: "PmwAd6negPriiyj1BbnMVogFiXKkPn05dSaV/G5y+unqB60OgtKu3JPU2f1qCPHocjmvniOGJ8M8Lvqw19DWNUJ47NDlr/RMDzihZeQHPKt9kAkk8EvwiE/4FM7g4f2GcT/kuwanRsymaZkPiJYe847hZrOXP+ba/8VfLv6OtVK85Tnny8+hHe7GCQag7taOJCIFUosnHo70kXXwhbArsx8V6rDbbwlrmzpktjCMdJTue2uPs4xXGThM4AJC3hRSmbxN977QlHMr2+OW2NL7ofwUbwRA6mj8b0I6FZy6JpUYjfh9hLTiv5z032NLUm21SwQy7grQMJAzoBplQWBGerLZfJvcOrSmGTkC8poiKngIFQ4fR6lo8Pg/c6FE00FvekVEuiX5u5kPzzkPFnu7wFXiX2XT23bbCKKdqLciBea8ReTjINRlFBUspWHXe5wW4ONUr7bVBggfYF989PFBBLuF7XYwJki4P08CIEqeA/nOfqNqsGnA6kDOpvcaOl8zUclnlCVk0D5dJwsFaeckzxOYV98FDMe40bcNBUOsX7LQ2N82/o3QM/zkC+f39haM2ExvjJSuP7vjPWldrMNLquPHzSoOuK5q1oX+MIkxMqOLFSr4zWdrayINCB5vZ3sg04c9bNZXGhNdVLNiDkFC52b6AGoV9maLoI/BUqyUlII="
   file_glob: true
-  tag_name: $TRAVIS_TAG-9.4
+  tag_name: $TRAVIS_TAG
   file: $RELEASE_FILES
-  name: Release-$TRAVIS_TAG-9.4
+  name: Release-$TRAVIS_TAG
   skip_cleanup: true
   on:
     branch: master
