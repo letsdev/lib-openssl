@@ -86,7 +86,7 @@ function build_android_arch {
         echo "toolchain ${TOOL_NAME} missing, create it"
         $ANDROID_NDK_HOME/build/tools/make-standalone-toolchain.sh \
         --platform=android-$ANDROID_SDK \
-        --stl=libc++ \
+        --stl=libc++_shared \
         --arch=$ARCH \
         --install-dir=$TOOLCHAIN_ROOT_PATH \
         --verbose
