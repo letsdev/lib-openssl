@@ -55,13 +55,13 @@ RUN echo "************ Installing C++ Support ************" \
     && sdkmanager 'cmake;3.6.4111459' 
 
 # NDK
-RUN echo "************ Installing Android NDK 17c ************" \
+RUN echo "************ Installing Android NDK 18b ************" \
     && wget --output-document=$HOME/ndk.zip -q \
-        "https://dl.google.com/android/repository/android-ndk-r17c-linux-x86_64.zip" \
+        "https://dl.google.com/android/repository/android-ndk-r18b-linux-x86_64.zip" \
     && mkdir -p $ANDROID_NDK_HOME \
     && unzip -q $HOME/ndk.zip -d $ANDROID_NDK_HOME  \
-    && mv $ANDROID_NDK_HOME/android-ndk-r17c/* $ANDROID_NDK_HOME \
-    && rm -f $HOME/ndk.zip && rm -d $ANDROID_NDK_HOME/android-ndk-r17c
+    && mv $ANDROID_NDK_HOME/android-ndk-r18b/* $ANDROID_NDK_HOME \
+    && rm -f $HOME/ndk.zip && rm -d $ANDROID_NDK_HOME/android-ndk-r18b
 
 RUN useradd build -m -u 112
 USER build

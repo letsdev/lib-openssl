@@ -86,15 +86,15 @@ function build_android_arch {
         echo "toolchain ${TOOL_NAME} missing, create it"
         $ANDROID_NDK_HOME/build/tools/make-standalone-toolchain.sh \
         --platform=android-$ANDROID_SDK \
-        --stl=libc++ \
+        --stl=libc++_shared \
         --arch=$ARCH \
         --install-dir=$TOOLCHAIN_ROOT_PATH \
         --verbose
     fi
 
     export SYSROOT=$TOOLCHAIN_ROOT_PATH/sysroot
-    export CC="$NDK_TOOLCHAIN_BASENAME-gcc --sysroot=${SYSROOT}"
-    export CXX=$NDK_TOOLCHAIN_BASENAME-gcc++
+    export CC="$NDK_TOOLCHAIN_BASENAME-clang --sysroot=${SYSROOT}"
+    export CXX=$NDK_TOOLCHAIN_BASENAME-clang++
     export LINK=${CXX} 
     export LD=$NDK_TOOLCHAIN_BASENAME-ld
     export AR=$NDK_TOOLCHAIN_BASENAME-ar
