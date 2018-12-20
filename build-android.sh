@@ -93,8 +93,8 @@ function build_android_arch {
     fi
 
     export SYSROOT=$TOOLCHAIN_ROOT_PATH/sysroot
-    export CC="$NDK_TOOLCHAIN_BASENAME-gcc --sysroot=${SYSROOT}"
-    export CXX=$NDK_TOOLCHAIN_BASENAME-gcc++
+    export CC="$NDK_TOOLCHAIN_BASENAME-clang --sysroot=${SYSROOT}"
+    export CXX=$NDK_TOOLCHAIN_BASENAME-clang++
     export LINK=${CXX} 
     export LD=$NDK_TOOLCHAIN_BASENAME-ld
     export AR=$NDK_TOOLCHAIN_BASENAME-ar

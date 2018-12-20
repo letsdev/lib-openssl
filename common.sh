@@ -55,7 +55,7 @@ function unarchive() {
     ZIP_PATH=$2
     TARGET=$3
     TARGET_DIR=$4
-    
+
     if [ -d $TARGET_DIR ]; then
         echo "Remove unarchive target dir for $TARGET"
         rm -dr $TARGET_DIR
@@ -63,4 +63,7 @@ function unarchive() {
     
     echo "Unarchive sources for $TARGET..."
     (cd $BUILD_DIR; tar -zxf $ZIP_PATH; mv $EXTRACTED_NAME $TARGET_DIR;) || exit 29
+
+    echo "Applying Patch for cmake build."
+    patch $TARGET_DIR/Configure configure.patch
 }
