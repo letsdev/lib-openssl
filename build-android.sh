@@ -73,7 +73,14 @@ function build_android_arch {
     echo ${HOST_TAG}
 
     local TOOLCHAIN_ROOT_PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/${HOST_TAG}
+    local CLANG_TOOLCHAIN=${TOOLCHAIN_NAME}
+    if [[ ${ABI} == "armeabi-v7a" ]]; then
+        local V7A_BIN="armv7a-linux-androideabi"
+        echo "Update clang ${ABI} bin toolchain name to ${V7A_BIN}"
+        CLANG_TOOLCHAIN=${V7A_BIN}
+    fi
     local NDK_TOOLCHAIN_BASENAME="${TOOLCHAIN_ROOT_PATH}/bin/${TOOLCHAIN_NAME}"
+    local NDK_TOOLCHAIN_CLANG_BASENAME="${TOOLCHAIN_ROOT_PATH}/bin/${CLANG_TOOLCHAIN}"
     local CMAKE_TOOLCHAIN_FILE=${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake
     echo "NDK_TOOLCHAIN_BASENAME ${NDK_TOOLCHAIN_BASENAME}"
 
@@ -87,8 +94,8 @@ function build_android_arch {
     patch ${TARGET_PATCH_CONFIGURE} patches/Configure.patch
 
     export SYSROOT=${TOOLCHAIN_ROOT_PATH}/sysroot
-    export CC="${NDK_TOOLCHAIN_BASENAME}${ANDROID_SDK}-clang --sysroot=${SYSROOT}"
-    export CXX=${NDK_TOOLCHAIN_BASENAME}${ANDROID_SDK}-clang++
+    export CC="${NDK_TOOLCHAIN_CLANG_BASENAME}${ANDROID_SDK}-clang --sysroot=${SYSROOT}"
+    export CXX=${NDK_TOOLCHAIN_CLANG_BASENAME}${ANDROID_SDK}-clang++
     export LINK=${CXX} 
     export LD=${NDK_TOOLCHAIN_BASENAME}-ld
     export AR=${NDK_TOOLCHAIN_BASENAME}-ar
@@ -104,7 +111,7 @@ function build_android_arch {
     export LDFLAGS=" ${ARCH_LINK} "
 
 	echo "Configuring android-${ABI}"
-	(cd "${SRC_DIR}"; ./Configure -DOPENSSL_PIC -fPIC "${COMPILER}" > "${LOG_FILE}" 2>&1)
+	(cd "${SRC_DIR}"; ./Configure ${OPENSSL_CONFIG_OPTIONS} -DOPENSSL_PIC -fPIC "${COMPILER}" > "${LOG_FILE}" 2>&1)
 
     local TARGET_PATCH_MAKEFILE="${SRC_DIR}/Makefile"
     echo "Applying Patch for ${TARGET_PATCH_MAKEFILE}"
