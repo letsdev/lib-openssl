@@ -104,7 +104,7 @@ function build_android_arch {
     export LDFLAGS=" ${ARCH_LINK} "
 
 	echo "Configuring android-${ABI}"
-	(cd "${SRC_DIR}"; ./Configure ${OPENSSL_CONFIG_OPTIONS} -DOPENSSL_NO_ASM -DOPENSSL_PIC -fPIC "${COMPILER}" > "${LOG_FILE}" 2>&1)
+	(cd "${SRC_DIR}"; ./Configure -DOPENSSL_PIC -fPIC "${COMPILER}" > "${LOG_FILE}" 2>&1)
 
     local TARGET_PATCH_MAKEFILE="${SRC_DIR}/Makefile"
     echo "Applying Patch for ${TARGET_PATCH_MAKEFILE}"
@@ -129,10 +129,10 @@ function build_android {
 	local ARM_ARCH_FLAGS="-mthumb"
 
 	# abi, arch, toolchain, openssl-config, arch_flags, arch_link
-#	build_android_arch 'arm64-v8a' 'arm64' 'aarch64-linux-android' 'android'
-#	build_android_arch 'armeabi-v7a' 'arm' 'arm-linux-androideabi' 'android-armv7' ${ARMV7_ARCH_FLAGS} ${ARMV7_ARCH_LINK}
-#	build_android_arch 'armeabi' 'arm' 'arm-linux-androideabi' 'android' ${ARM_ARCH_FLAGS}
-#	build_android_arch 'x86' 'x86' 'i686-linux-android' 'android-x86' ${X86_ARCH_FLAGS}
+	build_android_arch 'arm64-v8a' 'arm64' 'aarch64-linux-android' 'android'
+	build_android_arch 'armeabi-v7a' 'arm' 'arm-linux-androideabi' 'android-armv7' ${ARMV7_ARCH_FLAGS} ${ARMV7_ARCH_LINK}
+	build_android_arch 'armeabi' 'arm' 'arm-linux-androideabi' 'android' ${ARM_ARCH_FLAGS}
+	build_android_arch 'x86' 'x86' 'i686-linux-android' 'android-x86' ${X86_ARCH_FLAGS}
 	build_android_arch 'x86_64' 'x86_64' 'x86_64-linux-android' 'android'
 }
 
@@ -177,7 +177,7 @@ function host_tag {
     local result
     if [[ ${name} =~ "Darwin" ]]; then
         result="darwin-x86_64"
-    elif [[ ${name} =~ "Darwin" ]]; then
+    elif [[ ${name} =~ "Linux" ]]; then
         result="linux-x86_64"
     else
         echo "Can't find matching host tag for ${name}"
@@ -192,4 +192,4 @@ function host_tag {
 
 clear_android_env
 build_android
-#distribute_android
+distribute_android
