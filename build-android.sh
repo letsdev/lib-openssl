@@ -15,7 +15,8 @@ download_openssl
 ## Parameters
 ## --------------------
 
-ANDROID_SDK=21
+ANDROID_SDK=28
+ANDROID_MIN_SDK=21
 
 ## --------------------
 ## Variables
@@ -68,10 +69,9 @@ function build_android_arch {
     local SRC_DIR=${BUILD_DIR}/android-${ABI}
     local LOG_FILE="$SRC_DIR/android-${ABI}-${VERSION}.log"
 
-    local TOOL_NAME=${ARCH}-linux-android
-    local TOOLCHAIN_ROOT_PATH=${BUILD_DIR}/toolchains/${TOOL_NAME}
-    local TOOLCHAIN_PATH=${TOOLCHAIN_ROOT_PATH}/bin
-    local NDK_TOOLCHAIN_BASENAME=${TOOLCHAIN_PATH}/${TOOLCHAIN_NAME}
+    local TOOLCHAIN_ROOT_PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64
+    local NDK_TOOLCHAIN_BASENAME="${TOOLCHAIN_ROOT_PATH}/bin/${TOOLCHAIN_NAME}"
+    local CMAKE_TOOLCHAIN_FILE=${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake
     echo "NDK_TOOLCHAIN_BASENAME ${NDK_TOOLCHAIN_BASENAME}"
 
     # indicate new build
@@ -79,23 +79,13 @@ function build_android_arch {
     echo "Begin: $(date)"
 	# folder, zip, target, target dir
     unarchive ${OPENSSL_NAME} ${OPENSSL_PATH} "android-${ABI}" ${SRC_DIR}
-    patch ${SRC_DIR}
-    
-    if [[ -d ${TOOLCHAIN_PATH} ]]; then
-        echo "toolchain ${TOOL_NAME} exists"
-    else
-        echo "toolchain ${TOOL_NAME} missing, create it"
-        ${ANDROID_NDK_HOME}/build/tools/make-standalone-toolchain.sh \
-        --platform=android-${ANDROID_SDK} \
-        --stl=libc++_shared \
-        --arch=${ARCH} \
-        --install-dir=${TOOLCHAIN_ROOT_PATH} \
-        --verbose
-    fi
+    echo "Applying Patch for ${SRC_DIR}"
+    patch ${SRC_DIR}/Configure Configure.patch
+    patch ${SRC_DIR}/Makefile Makefile.patch
 
     export SYSROOT=${TOOLCHAIN_ROOT_PATH}/sysroot
-    export CC="${NDK_TOOLCHAIN_BASENAME}-clang --sysroot=${SYSROOT}"
-    export CXX=${NDK_TOOLCHAIN_BASENAME}-clang++
+    export CC="${NDK_TOOLCHAIN_BASENAME}${ANDROID_SDK}-clang --sysroot=${SYSROOT}"
+    export CXX=${NDK_TOOLCHAIN_BASENAME}${ANDROID_SDK}-clang++
     export LINK=${CXX} 
     export LD=${NDK_TOOLCHAIN_BASENAME}-ld
     export AR=${NDK_TOOLCHAIN_BASENAME}-ar
@@ -114,7 +104,7 @@ function build_android_arch {
 	(cd "${SRC_DIR}"; ./Configure ${OPENSSL_CONFIG_OPTIONS} -DOPENSSL_PIC -fPIC "${COMPILER}" > "${LOG_FILE}" 2>&1)
 
     echo "Building android-${ABI}..."
-	(cd "${SRC_DIR}"; make build_libs >> "${LOG_FILE}" 2>&1)
+	(cd "${SRC_DIR}"; make build_libs "CMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}" >> "${LOG_FILE}" 2>&1)
 
 	clear_android_env
     check_files ${ABI} ${LOG_FILE}
@@ -131,10 +121,10 @@ function build_android {
 	local ARM_ARCH_FLAGS="-mthumb"
 
 	# abi, arch, toolchain, openssl-config, arch_flags, arch_link
-	build_android_arch 'arm64-v8a' 'arm64' 'aarch64-linux-android' 'android'
-	build_android_arch 'armeabi-v7a' 'arm' 'arm-linux-androideabi' 'android-armv7' ${ARMV7_ARCH_FLAGS} ${ARMV7_ARCH_LINK}
-	build_android_arch 'armeabi' 'arm' 'arm-linux-androideabi' 'android' ${ARM_ARCH_FLAGS}
-	build_android_arch 'x86' 'x86' 'i686-linux-android' 'android-x86' ${X86_ARCH_FLAGS}
+#	build_android_arch 'arm64-v8a' 'arm64' 'aarch64-linux-android' 'android'
+#	build_android_arch 'armeabi-v7a' 'arm' 'arm-linux-androideabi' 'android-armv7' ${ARMV7_ARCH_FLAGS} ${ARMV7_ARCH_LINK}
+#	build_android_arch 'armeabi' 'arm' 'arm-linux-androideabi' 'android' ${ARM_ARCH_FLAGS}
+#	build_android_arch 'x86' 'x86' 'i686-linux-android' 'android-x86' ${X86_ARCH_FLAGS}
 	build_android_arch 'x86_64' 'x86_64' 'x86_64-linux-android' 'android'
 }
 

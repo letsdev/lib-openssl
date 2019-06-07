@@ -65,9 +65,3 @@ function unarchive() {
     echo "Unarchive sources for $TARGET..."
     (cd ${BUILD_DIR}; tar -zxf ${ZIP_PATH}; mv ${EXTRACTED_NAME} ${TARGET_DIR};) || exit 29
 }
-
-function patch() {
-    TARGET_DIR=$1
-    echo "Applying Patch for ${TARGET_DIR}"
-    patch ${TARGET_DIR}/Configure configure.patch
-}
