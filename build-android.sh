@@ -84,7 +84,7 @@ function build_android_arch {
     unarchive ${OPENSSL_NAME} ${OPENSSL_PATH} "android-${ABI}" ${SRC_DIR}
     local TARGET_PATCH_CONFIGURE="${SRC_DIR}/Configure"
     echo "Applying Patch for ${TARGET_PATCH_CONFIGURE}"
-    patch ${TARGET_PATCH_CONFIGURE} Configure.patch
+    patch ${TARGET_PATCH_CONFIGURE} patches/Configure.patch
 
     export SYSROOT=${TOOLCHAIN_ROOT_PATH}/sysroot
     export CC="${NDK_TOOLCHAIN_BASENAME}${ANDROID_SDK}-clang --sysroot=${SYSROOT}"
@@ -108,8 +108,7 @@ function build_android_arch {
 
     local TARGET_PATCH_MAKEFILE="${SRC_DIR}/Makefile"
     echo "Applying Patch for ${TARGET_PATCH_MAKEFILE}"
-    patch ${TARGET_PATCH_MAKEFILE} Makefile.patch
-#    patch ${TARGET_PATCH_MAKEFILE} Makefile_local.patch
+    patch ${TARGET_PATCH_MAKEFILE} patches/Makefile-${ABI}.patch
 
     echo "Building android-${ABI}..."
 	(cd "${SRC_DIR}"; make build_libs "CMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}" >> "${LOG_FILE}" 2>&1)
@@ -131,7 +130,6 @@ function build_android {
 	# abi, arch, toolchain, openssl-config, arch_flags, arch_link
 	build_android_arch 'arm64-v8a' 'arm64' 'aarch64-linux-android' 'android'
 	build_android_arch 'armeabi-v7a' 'arm' 'arm-linux-androideabi' 'android-armv7' ${ARMV7_ARCH_FLAGS} ${ARMV7_ARCH_LINK}
-	build_android_arch 'armeabi' 'arm' 'arm-linux-androideabi' 'android' ${ARM_ARCH_FLAGS}
 	build_android_arch 'x86' 'x86' 'i686-linux-android' 'android-x86' ${X86_ARCH_FLAGS}
 	build_android_arch 'x86_64' 'x86_64' 'x86_64-linux-android' 'android'
 }
@@ -158,7 +156,7 @@ function distribute_android {
     local PLATFORM="Android"
     local NAME="${PLATFORM}"
     local DIR="${DIST_DIR}/${NAME}/openssl"
-	local ANDROID_ABIS="arm64-v8a armeabi-v7a armeabi x86 x86_64"
+	local ANDROID_ABIS="arm64-v8a armeabi-v7a x86 x86_64"
 	
 	for ABI in ${ANDROID_ABIS}; do
 		local ABI_DIR=${DIR}/${ABI}
