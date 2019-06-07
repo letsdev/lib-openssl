@@ -69,8 +69,8 @@ function build_android_arch {
     local SRC_DIR=${BUILD_DIR}/android-${ABI}
     local LOG_FILE="$SRC_DIR/android-${ABI}-${VERSION}.log"
 
-    local TOOLCHAIN_ROOT_PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64
-    local NDK_TOOLCHAIN_BASENAME="${TOOLCHAIN_ROOT_PATH}/bin/${TOOLCHAIN_NAME}"
+    local TOOLCHAIN_ROOT_PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64
+    local NDK_TOOLCHAIN_BASENAME="${TOOLCHAIN_ROOT_PATH}/bin/"
     local CMAKE_TOOLCHAIN_FILE=${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake
     echo "NDK_TOOLCHAIN_BASENAME ${NDK_TOOLCHAIN_BASENAME}"
 
@@ -80,12 +80,10 @@ function build_android_arch {
 	# folder, zip, target, target dir
     unarchive ${OPENSSL_NAME} ${OPENSSL_PATH} "android-${ABI}" ${SRC_DIR}
     echo "Applying Patch for ${SRC_DIR}"
-    patch ${SRC_DIR}/Configure Configure.patch
-    patch ${SRC_DIR}/Makefile Makefile.patch
 
     export SYSROOT=${TOOLCHAIN_ROOT_PATH}/sysroot
-    export CC="${NDK_TOOLCHAIN_BASENAME}${ANDROID_SDK}-clang --sysroot=${SYSROOT}"
-    export CXX=${NDK_TOOLCHAIN_BASENAME}${ANDROID_SDK}-clang++
+    export CC="${NDK_TOOLCHAIN_BASENAME}clang --sysroot=${SYSROOT}"
+    export CXX=${NDK_TOOLCHAIN_BASENAME}clang++
     export LINK=${CXX} 
     export LD=${NDK_TOOLCHAIN_BASENAME}-ld
     export AR=${NDK_TOOLCHAIN_BASENAME}-ar
@@ -102,6 +100,10 @@ function build_android_arch {
 
 	echo "Configuring android-${ABI}"
 	(cd "${SRC_DIR}"; ./Configure ${OPENSSL_CONFIG_OPTIONS} -DOPENSSL_PIC -fPIC "${COMPILER}" > "${LOG_FILE}" 2>&1)
+
+    #patch ${SRC_DIR}/Configure Configure.patch
+    #patch ${SRC_DIR}/Makefile Makefile.patch
+    patch ${SRC_DIR}/Makefile Makefile_local.patch
 
     echo "Building android-${ABI}..."
 	(cd "${SRC_DIR}"; make build_libs "CMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}" >> "${LOG_FILE}" 2>&1)
