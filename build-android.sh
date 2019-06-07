@@ -69,7 +69,10 @@ function build_android_arch {
     local SRC_DIR=${BUILD_DIR}/android-${ABI}
     local LOG_FILE="$SRC_DIR/android-${ABI}-${VERSION}.log"
 
-    local TOOLCHAIN_ROOT_PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64
+    HOST_TAG=$(host_tag)
+    echo ${HOST_TAG}
+
+    local TOOLCHAIN_ROOT_PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/${HOST_TAG}
     local NDK_TOOLCHAIN_BASENAME="${TOOLCHAIN_ROOT_PATH}/bin/"
     local CMAKE_TOOLCHAIN_FILE=${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake
     echo "NDK_TOOLCHAIN_BASENAME ${NDK_TOOLCHAIN_BASENAME}"
@@ -79,9 +82,11 @@ function build_android_arch {
     echo "Begin: $(date)"
 	# folder, zip, target, target dir
     unarchive ${OPENSSL_NAME} ${OPENSSL_PATH} "android-${ABI}" ${SRC_DIR}
-    echo "Applying Patch for ${SRC_DIR}"
+    local TARGET_PATCH_CONFIGURE="${SRC_DIR}/Configure"
+    echo "Applying Patch for ${TARGET_PATCH_CONFIGURE}"
+    patch ${TARGET_PATCH_CONFIGURE} Configure.patch
 
-    export SYSROOT=${ANDROID_NDK_HOME}/sysroot
+    export SYSROOT=${TOOLCHAIN_ROOT_PATH}/sysroot
     export CC="${NDK_TOOLCHAIN_BASENAME}clang --sysroot=${SYSROOT}"
     export CXX=${NDK_TOOLCHAIN_BASENAME}clang++
     export LINK=${CXX} 
@@ -90,20 +95,21 @@ function build_android_arch {
     export AS=${NDK_TOOLCHAIN_BASENAME}-as
     export RANLIB=${NDK_TOOLCHAIN_BASENAME}-ranlib
     export STRIP=${NDK_TOOLCHAIN_BASENAME}-strip
-    
+
     export ARCH_FLAGS=$5
     export ARCH_LINK=$6 
-    export CPPFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing " 
-    export CXXFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -frtti -fexceptions " 
-    export CFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing " 
+    export CPPFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing "
+    export CXXFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -frtti -fexceptions -isystem ${SYSROOT}/usr/include/${TOOLCHAIN_NAME}"
+    export CFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -isystem ${SYSROOT}/usr/include/${TOOLCHAIN_NAME}"
     export LDFLAGS=" ${ARCH_LINK} "
 
 	echo "Configuring android-${ABI}"
-	(cd "${SRC_DIR}"; ./Configure ${OPENSSL_CONFIG_OPTIONS} -DOPENSSL_PIC -fPIC "${COMPILER}" > "${LOG_FILE}" 2>&1)
+	(cd "${SRC_DIR}"; ./Configure ${OPENSSL_CONFIG_OPTIONS} -DOPENSSL_NO_ASM -DOPENSSL_PIC -fPIC "${COMPILER}" > "${LOG_FILE}" 2>&1)
 
-    #patch ${SRC_DIR}/Configure Configure.patch
-    #patch ${SRC_DIR}/Makefile Makefile.patch
-    patch ${SRC_DIR}/Makefile Makefile_local.patch
+    local TARGET_PATCH_MAKEFILE="${SRC_DIR}/Makefile"
+    echo "Applying Patch for ${TARGET_PATCH_MAKEFILE}"
+    patch ${TARGET_PATCH_MAKEFILE} Makefile.patch
+#    patch ${TARGET_PATCH_MAKEFILE} Makefile_local.patch
 
     echo "Building android-${ABI}..."
 	(cd "${SRC_DIR}"; make build_libs "CMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}" >> "${LOG_FILE}" 2>&1)
@@ -166,9 +172,24 @@ function distribute_android {
     done
 }
 
+function host_tag {
+    local name=`uname`
+    local result
+    if [[ ${name} =~ "Darwin" ]]; then
+        result="darwin-x86_64"
+    elif [[ ${name} =~ "Darwin" ]]; then
+        result="linux-x86_64"
+    else
+        echo "Can't find matching host tag for ${name}"
+        exit 1
+    fi
+    echo ${result}
+}
+
 ## --------------------
 ## Build (Main)
 ## --------------------
+
 clear_android_env
 build_android
-distribute_android
+#distribute_android
