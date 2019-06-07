@@ -73,7 +73,7 @@ function build_android_arch {
     echo ${HOST_TAG}
 
     local TOOLCHAIN_ROOT_PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/${HOST_TAG}
-    local NDK_TOOLCHAIN_BASENAME="${TOOLCHAIN_ROOT_PATH}/bin/"
+    local NDK_TOOLCHAIN_BASENAME="${TOOLCHAIN_ROOT_PATH}/bin/${TOOLCHAIN_NAME}"
     local CMAKE_TOOLCHAIN_FILE=${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake
     echo "NDK_TOOLCHAIN_BASENAME ${NDK_TOOLCHAIN_BASENAME}"
 
@@ -87,8 +87,8 @@ function build_android_arch {
     patch ${TARGET_PATCH_CONFIGURE} Configure.patch
 
     export SYSROOT=${TOOLCHAIN_ROOT_PATH}/sysroot
-    export CC="${NDK_TOOLCHAIN_BASENAME}clang --sysroot=${SYSROOT}"
-    export CXX=${NDK_TOOLCHAIN_BASENAME}clang++
+    export CC="${NDK_TOOLCHAIN_BASENAME}${ANDROID_SDK}-clang --sysroot=${SYSROOT}"
+    export CXX=${NDK_TOOLCHAIN_BASENAME}${ANDROID_SDK}-clang++
     export LINK=${CXX} 
     export LD=${NDK_TOOLCHAIN_BASENAME}-ld
     export AR=${NDK_TOOLCHAIN_BASENAME}-ar
@@ -98,9 +98,9 @@ function build_android_arch {
 
     export ARCH_FLAGS=$5
     export ARCH_LINK=$6 
-    export CPPFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing "
-    export CXXFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -frtti -fexceptions -isystem ${SYSROOT}/usr/include/${TOOLCHAIN_NAME}"
-    export CFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -isystem ${SYSROOT}/usr/include/${TOOLCHAIN_NAME}"
+    export CPPFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -I${SYSROOT}/usr/include/${TOOLCHAIN_NAME}"
+    export CXXFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -frtti -fexceptions -I${SYSROOT}/usr/include/${TOOLCHAIN_NAME}"
+    export CFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -I${SYSROOT}/usr/include/${TOOLCHAIN_NAME}"
     export LDFLAGS=" ${ARCH_LINK} "
 
 	echo "Configuring android-${ABI}"
