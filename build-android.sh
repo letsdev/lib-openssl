@@ -81,7 +81,7 @@ function build_android_arch {
     unarchive ${OPENSSL_NAME} ${OPENSSL_PATH} "android-${ABI}" ${SRC_DIR}
     echo "Applying Patch for ${SRC_DIR}"
 
-    export SYSROOT=${TOOLCHAIN_ROOT_PATH}/sysroot
+    export SYSROOT=${ANDROID_NDK_HOME}/sysroot
     export CC="${NDK_TOOLCHAIN_BASENAME}clang --sysroot=${SYSROOT}"
     export CXX=${NDK_TOOLCHAIN_BASENAME}clang++
     export LINK=${CXX} 
