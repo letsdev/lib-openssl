@@ -3,14 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.letsdev.intern.openssl</groupId>
     <artifactId>Openssl-mobile</artifactId>
-    <version>1.0.2q</version>
+    <version>1.0.2s</version>
 
     <name>Open ssl for mobile (android and iOS)</name>
 
     <scm>
-        <url>http://dev1/gitlab/ld/lib-openssl</url>
-        <connection>scm:git:git://dev1:ld/lib-openssl.git</connection>
-        <developerConnection>scm:git:git@dev1:ld/lib-openssl.git</developerConnection>
+        <url>http://gitlab.letsdev.intern/ld/lib-openssl</url>
+        <connection>scm:git:git://gitlab.letsdev.intern:ld/lib-openssl.git</connection>
+        <developerConnection>scm:git:git@gitlab.letsdev.intern:ld/lib-openssl.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 

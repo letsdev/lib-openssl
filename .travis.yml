@@ -5,7 +5,7 @@ matrix:
       services:
         - docker
     - os: osx
-      osx_image: xcode10.0
+      osx_image: xcode10.2
 
 env: 
   - RELEASE_FILES=$TRAVIS_BUILD_DIR/target/*.zip
@@ -33,8 +33,13 @@ script:
     else
       mvn package -P ios
     fi
+  - |
+    if [ $TRAVIS_OS_NAME == "linux" ]; then
+      export TRAVIS_TAG=$TRAVIS_TAG-Android
+    else
+      export TRAVIS_TAG=$TRAVIS_TAG-iOS
+    fi
 
-  
 before_deploy:
   - git config --local user.name "cwack"
   - git config --local user.email "christian.wack@letsdev.de"

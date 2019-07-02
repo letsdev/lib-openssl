@@ -10,41 +10,38 @@ node('docker') {
         dockerImage = docker.build('openssl')
     }
 
-    def options = """
-    -v $WORKSPACE:/home/build/app 
-    -v $HOME/.m2:/home/build/.m2 
-    -v $HOME/.gitconfig:/home/build/.gitconfig
-    -v $HOME/ld-config:/home/build/ld-config
+    GString options = """
+    -v ${env.WORKSPACE}:/home/build/app 
+    -v ${env.HOME}/.m2:/home/build/.m2 
+    -v ${env.HOME}/.gitconfig:/home/build/.gitconfig
+    -v ${env.HOME}/ld-config:/home/build/ld-config
     """
     def pom = readMavenPom file: 'pom.xml'
     def VERSION = pom.version
 
     parallel(
-        failFast: true,
-        android: {
-            stage('android') {  
-                dockerImage.inside(options) {
-                    sh 'chmod a+x ./*.sh'
-                    sh "./build-android.sh ${VERSION}"
-                    sh 'mvn deploy -P android'
+            failFast: true,
+            android: {
+                stage('android') {
+                    dockerImage.inside(options) {
+                        sh "./build-android.sh ${VERSION}"
+                        sh 'mvn deploy -P android'
+                    }
+                }
+            },
+            ios: {
+                stage('xcode-10-1') {
+                    node('ios') {
+                        deleteDir()
+                        checkout scm
+                        sh "./build-ios.sh ${VERSION}"
+                        sh 'mvn deploy -P ios'
+                    }
                 }
             }
-        },
-        ios: {
-            stage('ios') {
-                node('ios') {
-                    deleteDir()
-                    checkout scm
-                    sh 'chmod a+x ./*.sh'
-                    sh "./build-ios.sh ${VERSION}"
-                    sh 'mvn deploy -P ios'
-                }
-            }
-        }
     )
 
     stage('tag') {
-        de.letsdev.git.LdGit ldGit = new de.letsdev.git.LdGit()
-        ldGit.pushTag(VERSION)
+        tagPush(VERSION)
     }
 }
