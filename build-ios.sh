@@ -110,6 +110,7 @@ function distribute_ios() {
         "${BUILD_DIR}/iPhoneSimulator-i386/${f}" \
         "${BUILD_DIR}/iPhoneSimulator-x86_64/${f}" \
         "${BUILD_DIR}/iPhoneOS-arm64/${f}" \
+        "${BUILD_DIR}/iPhoneOS-arm64e/${f}" \
         "${BUILD_DIR}/iPhoneOS-armv7/${f}" \
         "${BUILD_DIR}/iPhoneOS-armv7s/${f}" \
         -output ${OUTPUT_FILE}
