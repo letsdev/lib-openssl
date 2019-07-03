@@ -30,7 +30,7 @@ node('docker') {
                 }
             },
             ios: {
-                stage('xcode-10-1') {
+                stage('xcode-10-2') {
                     node('ios') {
                         deleteDir()
                         checkout scm
