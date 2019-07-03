@@ -111,7 +111,7 @@ function build_android_arch {
     export LDFLAGS=" ${ARCH_LINK} "
 
 	echo "Configuring android-${ABI}"
-	(cd "${SRC_DIR}"; ./Configure ${OPENSSL_CONFIG_OPTIONS} -DOPENSSL_PIC -fPIC "${COMPILER}" > "${LOG_FILE}" 2>&1)
+	(cd "${SRC_DIR}"; ./Configure ${OPENSSL_CONFIG_OPTIONS} -DOPENSSL_PIC -fPIC -no-stdio "${COMPILER}" > "${LOG_FILE}" 2>&1)
 
     local TARGET_PATCH_MAKEFILE="${SRC_DIR}/Makefile"
     echo "Applying Patch for ${TARGET_PATCH_MAKEFILE}"
