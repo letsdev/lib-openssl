@@ -53,7 +53,7 @@ function build_ios() {
             PLATFORM="iPhoneSimulator"
         fi
 
-        if [[ "$ARCH" == "arm64" || "$ARCH" == "arm64e" || "$ARCH" == "x86_64" ]]; then
+        if [[ "$ARCH" == "arm64" || "$ARCH" == "arm64e" ]]; then
             COMPILER="ios64-cross"
         fi
 
