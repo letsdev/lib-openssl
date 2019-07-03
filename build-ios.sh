@@ -115,6 +115,7 @@ function distribute_ios() {
         "${BUILD_DIR}/iPhoneOS-armv7s/${f}" \
         -output ${OUTPUT_FILE}
         echo "Created ${OUTPUT_FILE}"
+        echo "Architectues: $(lipo -info ${OUTPUT_FILE})"
     done
 
 	echo "Create iOS-Framework"
