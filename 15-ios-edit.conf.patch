@@ -1,0 +1,5 @@
+--- build/android-arm64-v8a/Configurations/15-ios.conf	2019-05-28 15:12:21.000000000 +0200
++++ 15-ios-edit.conf	2019-07-03 16:35:45.000000000 +0200
+@@ -24,1 +24,1 @@
+-        cflags           => add("-arch arm64 -mios-version-min=7.0.0 -fno-common"),
++        cflags           => add("-mios-version-min=7.0.0 -fno-common"),
