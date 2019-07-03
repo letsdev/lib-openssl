@@ -7,7 +7,7 @@ matrix:
     - os: osx
       osx_image: xcode10.2
 
-env: 
+env:
   - RELEASE_FILES=$TRAVIS_BUILD_DIR/target/*.zip
 
 before_install:
@@ -19,7 +19,7 @@ before_install:
       docker build -t android-openssl .
       docker run -it -d --user build --name openssl-container -v $TRAVIS_BUILD_DIR/dist:/home/build/app/dist -e TRAVIS_TAG=$TRAVIS_TAG android-openssl bash
     fi
-  
+
 script:
   - |
     if [ $TRAVIS_OS_NAME == "linux" ]; then
