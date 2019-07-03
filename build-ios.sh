@@ -53,9 +53,13 @@ function build_ios() {
             PLATFORM="iPhoneSimulator"
         fi
 
+        if [[ "$ARCH" == "arm64" || "$ARCH" == "arm64e" || "$ARCH" == "x86_64" ]]; then
+            COMPILER="ios64-cross"
+        fi
+
         local SRC_DIR="${BUILD_DIR}/${PLATFORM}-${ARCH}"
         local LOG_FILE="${SRC_DIR}/${PLATFORM}${IOS_SDK}-${ARCH}.log"
-        
+
         export CROSS_TOP="${DEVELOPER_DIR}/Platforms/${PLATFORM}.platform/Developer"
         export CROSS_SDK="${PLATFORM}${IOS_SDK}.sdk"
         export CC="clang -arch ${ARCH} -fembed-bitcode"
@@ -66,7 +70,7 @@ function build_ios() {
 
    		echo "Configuring ${PLATFORM}-${ARCH}..."
         (cd "${SRC_DIR}"; ./Configure ${OPENSSL_CONFIG_OPTIONS} "${COMPILER}" > "${LOG_FILE}" 2>&1)
-        
+
         # Patch Makefile
         if [[ "${ARCH}" == "x86_64" ]]; then
             sed -ie "s/^CFLAG= -/CFLAG=  -miphoneos-version-min=$MIN_IOS -DOPENSSL_NO_ASM -/" "$SRC_DIR/Makefile"
@@ -76,7 +80,7 @@ function build_ios() {
         # Patch versions
         #sed -ie "s/^# define OPENSSL_VERSION_NUMBER.*$/# define OPENSSL_VERSION_NUMBER  $FAKE_NIBBLE/" "$SRC_DIR/crypto/opensslv.h"
         #sed -ie "s/^#  define OPENSSL_VERSION_TEXT.*$/#  define OPENSSL_VERSION_TEXT  \"$FAKE_TEXT\"/" "$SRC_DIR/crypto/opensslv.h"
-        
+
     	echo "Building ${PLATFORM}-${ARCH}..."
     	(cd "${SRC_DIR}"; make >> "${LOG_FILE}" 2>&1)
 
@@ -95,14 +99,14 @@ function distribute_ios() {
     local FILES="libcrypto.a libssl.a"
     mkdir -p "${DIR}/include"
     mkdir -p "${DIR}/lib"
-    
+
     #echo "$VERSION" > "$DIR/VERSION"
     #cp "$BUILD_DIR/iPhoneSimulator-i386/LICENSE" "$DIR"
     cp -LR "${BUILD_DIR}/iPhoneSimulator-i386/include/" "${DIR}/include"
-    
+
     # Alter rsa.h to make Swift happy
     sed -i .bak 's/const BIGNUM \*I/const BIGNUM *i/g' "${DIR}/include/openssl/rsa.h"
-    
+
     echo "Combine library files"
     for f in ${FILES}; do
         local OUTPUT_FILE=${DIR}/lib/${f}
@@ -110,10 +114,12 @@ function distribute_ios() {
         "${BUILD_DIR}/iPhoneSimulator-i386/${f}" \
         "${BUILD_DIR}/iPhoneSimulator-x86_64/${f}" \
         "${BUILD_DIR}/iPhoneOS-arm64/${f}" \
+        "${BUILD_DIR}/iPhoneOS-arm64e/${f}" \
         "${BUILD_DIR}/iPhoneOS-armv7/${f}" \
         "${BUILD_DIR}/iPhoneOS-armv7s/${f}" \
         -output ${OUTPUT_FILE}
         echo "Created ${OUTPUT_FILE}"
+        echo "Architectues: $(lipo -info ${OUTPUT_FILE})"
     done
 
 	echo "Create iOS-Framework"

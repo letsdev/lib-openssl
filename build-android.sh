@@ -89,33 +89,27 @@ function build_android_arch {
     echo "Begin: $(date)"
 	# folder, zip, target, target dir
     unarchive ${OPENSSL_NAME} ${OPENSSL_PATH} "android-${ABI}" ${SRC_DIR}
-    local TARGET_PATCH_CONFIGURE="${SRC_DIR}/Configure"
-    echo "Applying Patch for ${TARGET_PATCH_CONFIGURE}"
-    patch ${TARGET_PATCH_CONFIGURE} patches/Configure.patch
 
     export SYSROOT=${TOOLCHAIN_ROOT_PATH}/sysroot
     export CC="${NDK_TOOLCHAIN_CLANG_BASENAME}${ANDROID_SDK}-clang --sysroot=${SYSROOT}"
     export CXX=${NDK_TOOLCHAIN_CLANG_BASENAME}${ANDROID_SDK}-clang++
-    export LINK=${CXX} 
+    export LINK=${CXX}
     export LD=${NDK_TOOLCHAIN_BASENAME}-ld
     export AR=${NDK_TOOLCHAIN_BASENAME}-ar
     export AS=${NDK_TOOLCHAIN_BASENAME}-as
     export RANLIB=${NDK_TOOLCHAIN_BASENAME}-ranlib
     export STRIP=${NDK_TOOLCHAIN_BASENAME}-strip
+    export PATH=${TOOLCHAIN_ROOT_PATH}/bin:$PATH
 
     export ARCH_FLAGS=$5
-    export ARCH_LINK=$6 
+    export ARCH_LINK=$6
     export CPPFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -I${SYSROOT}/usr/include/${TOOLCHAIN_NAME}"
     export CXXFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -frtti -fexceptions -I${SYSROOT}/usr/include/${TOOLCHAIN_NAME}"
     export CFLAGS=" ${ARCH_FLAGS} -fPIC -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -I${SYSROOT}/usr/include/${TOOLCHAIN_NAME}"
     export LDFLAGS=" ${ARCH_LINK} "
 
 	echo "Configuring android-${ABI}"
-	(cd "${SRC_DIR}"; ./Configure ${OPENSSL_CONFIG_OPTIONS} -DOPENSSL_PIC -fPIC "${COMPILER}" > "${LOG_FILE}" 2>&1)
-
-    local TARGET_PATCH_MAKEFILE="${SRC_DIR}/Makefile"
-    echo "Applying Patch for ${TARGET_PATCH_MAKEFILE}"
-    patch ${TARGET_PATCH_MAKEFILE} patches/Makefile-${ABI}.patch
+	(cd "${SRC_DIR}"; ./Configure ${OPENSSL_CONFIG_OPTIONS} -DOPENSSL_PIC -fPIC -no-stdio "${COMPILER}" -D__ANDROID_API__=${ANDROID_MIN_SDK}> "${LOG_FILE}" 2>&1)
 
     echo "Building android-${ABI}..."
 	(cd "${SRC_DIR}"; make build_libs "CMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}" >> "${LOG_FILE}" 2>&1)
@@ -129,16 +123,16 @@ function build_android {
 
 	log_title "Android Build"
 
-	local X86_ARCH_FLAGS="-march=i686 -msse3 -mstackrealign -mfpmath=sse" 
+	local X86_ARCH_FLAGS="-march=i686 -msse3 -mstackrealign -mfpmath=sse"
 	local ARMV7_ARCH_FLAGS="-march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16"
-	local ARMV7_ARCH_LINK="-march=armv7-a -Wl,--fix-cortex-a8" 
+	local ARMV7_ARCH_LINK="-march=armv7-a -Wl,--fix-cortex-a8"
 	local ARM_ARCH_FLAGS="-mthumb"
 
 	# abi, arch, toolchain, openssl-config, arch_flags, arch_link
-	build_android_arch 'arm64-v8a' 'arm64' 'aarch64-linux-android' 'android'
-	build_android_arch 'armeabi-v7a' 'arm' 'arm-linux-androideabi' 'android-armv7' ${ARMV7_ARCH_FLAGS} ${ARMV7_ARCH_LINK}
+	build_android_arch 'arm64-v8a' 'arm64' 'aarch64-linux-android' 'android-arm64'
+	build_android_arch 'armeabi-v7a' 'arm' 'arm-linux-androideabi' 'android-arm' ${ARMV7_ARCH_FLAGS} ${ARMV7_ARCH_LINK}
 	build_android_arch 'x86' 'x86' 'i686-linux-android' 'android-x86' ${X86_ARCH_FLAGS}
-	build_android_arch 'x86_64' 'x86_64' 'x86_64-linux-android' 'android'
+	build_android_arch 'x86_64' 'x86_64' 'x86_64-linux-android' 'android-x86_64'
 }
 
 function check_files() {
