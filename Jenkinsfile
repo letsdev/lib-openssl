@@ -44,7 +44,6 @@ node('docker') {
     )
 
     stage('tag') {
-        de.letsdev.git.LdGit ldGit = new de.letsdev.git.LdGit()
-        ldGit.pushTag(VERSION)
+        tagPush(VERSION)
     }
 }
