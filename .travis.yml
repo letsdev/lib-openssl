@@ -51,4 +51,4 @@ deploy:
   name: Release-$TRAVIS_TAG
   skip_cleanup: true
   on:
-    branch: master
+    branch: release_1_0_2_q
