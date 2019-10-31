@@ -34,7 +34,7 @@ node('docker') {
                     node('ios') {
                         deleteDir()
                         checkout scm
-                        sh "xcode-select -s /Applications/Xcode-11.app"
+                        sh "sudo xcode-select -s /Applications/Xcode-11.app"
                         sh "./build-ios.sh ${VERSION}"
                         sh 'mvn deploy -P ios'
                     }
