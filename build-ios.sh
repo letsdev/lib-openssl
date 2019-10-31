@@ -15,7 +15,7 @@ download_openssl
 ## Parameters
 ## --------------------
 
-IOS_SDK=12.2
+IOS_SDK=13.1
 MIN_IOS=7.0
 IOS_ARCHS="i386 x86_64 armv7 armv7s arm64 arm64e"
 
@@ -28,6 +28,7 @@ if [[ ! -d ${DEVELOPER_DIR} ]]; then
     echo "Please set up Xcode correctly. '${DEVELOPER_DIR}' is not a valid developer tools folder."
     exit 1
 fi
+
 if [[ ! -d "${DEVELOPER_DIR}/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS${IOS_SDK}.sdk" ]]; then
     echo "The iOS SDK ${IOS_SDK} was not found."
     exit 1

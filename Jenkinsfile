@@ -30,10 +30,11 @@ node('docker') {
                 }
             },
             ios: {
-                stage('xcode-10-2') {
+                stage('xcode-11') {
                     node('ios') {
                         deleteDir()
                         checkout scm
+                        sh "xcode-select -s /Applications/Xcode-11.app"
                         sh "./build-ios.sh ${VERSION}"
                         sh 'mvn deploy -P ios'
                     }
