@@ -1,0 +1,11 @@
+--- /Users/mschwamberger/workspace/letsdev/libs/lib-openssl/build/MacOSX-i386/Configurations/10-main.conf	2019-09-10 15:13:07.000000000 +0200
++++ /Users/mschwamberger/workspace/letsdev/libs/lib-openssl/build/MacOSX-i386/Configurations/10-main-patch.conf	2020-05-18 15:13:23.000000000 +0200
+@@ -1520,7 +1520,7 @@
+         thread_scheme    => "pthreads",
+         perlasm_scheme   => "osx32",
+         dso_scheme       => "dlfcn",
+-        ranlib           => "ranlib -c",
++        ranlib           => "ranlib",
+         shared_target    => "darwin-shared",
+         shared_cflag     => "-fPIC",
+         shared_extension => ".\$(SHLIB_VERSION_NUMBER).dylib",

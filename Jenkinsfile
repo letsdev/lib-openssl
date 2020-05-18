@@ -39,6 +39,17 @@ node('docker') {
                         sh 'mvn deploy -P ios'
                     }
                 }
+            },
+            mac: {
+                stage('xcode-11') {
+                    node('ios') {
+                        deleteDir()
+                        checkout scm
+                        sh "sudo xcode-select -s /Applications/Xcode-11.app"
+                        sh "./build-mac.sh ${VERSION}"
+                        sh 'mvn deploy -P mac'
+                    }
+                }
             }
     )
 

@@ -67,6 +67,33 @@
             </build>
         </profile>
         <profile>
+            <id>mac</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <version>2.2-beta-5</version>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>ssl-mac.xml</descriptor>
+                                <descriptor>openssl-mac.xml</descriptor>
+                                <descriptor>crypto-mac.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>make-assembly</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
             <id>android</id>
             <build>
                 <plugins>
