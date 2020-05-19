@@ -55,25 +55,25 @@ function build_mac() {
         local SRC_DIR="${BUILD_DIR}/${PLATFORM}-${ARCH}"
         local LOG_FILE="${SRC_DIR}/${PLATFORM}${MAC_SDK}-${ARCH}.log"
 
-        export CROSS_TOP="${DEVELOPER_DIR}/Platforms/${PLATFORM}.platform/Developer"
-        export CROSS_SDK="${PLATFORM}${MAC_SDK}.sdk"
-        export CC="clang"
+        #export CROSS_TOP="${DEVELOPER_DIR}/Platforms/${PLATFORM}.platform/Developer"
+        #export CROSS_SDK="${PLATFORM}${MAC_SDK}.sdk"
+        export CC="clang -fPIC"
 
         # indicate new build
         echo ">>>"
 		# folder, zip, target, target dir
         unarchive ${OPENSSL_NAME} ${OPENSSL_PATH} "${PLATFORM}-${ARCH}" ${SRC_DIR}
 
-        local TARGET_PATCH_FILE="${SRC_DIR}/Configurations/10-main.conf"
-        echo "Patch ${TARGET_PATCH_FILE}"
-        patch ${TARGET_PATCH_FILE} "./10-main.conf.patch"
+        #local TARGET_PATCH_FILE="${SRC_DIR}/Configurations/10-main.conf"
+        #echo "Patch ${TARGET_PATCH_FILE}"
+        #patch ${TARGET_PATCH_FILE} "./10-main.conf.patch"
 
    		echo "Configuring ${PLATFORM}-${ARCH}..."
-        (cd "${SRC_DIR}"; ./Configure no-asm no-tests "${COMPILER}" > "${LOG_FILE}" 2>&1)
+        (cd "${SRC_DIR}"; ./Configure no-asm "${COMPILER}" > "${LOG_FILE}" 2>&1)
 
-        local TARGET_PATCH_FILE="${SRC_DIR}/Makefile"
-        echo "Patch ${TARGET_PATCH_FILE}"
-        patch ${TARGET_PATCH_FILE} "./Makefile-mac.patch"
+        #local TARGET_PATCH_FILE="${SRC_DIR}/Makefile"
+        #echo "Patch ${TARGET_PATCH_FILE}"
+        #patch ${TARGET_PATCH_FILE} "./Makefile-mac.patch"
 
     	echo "Building ${PLATFORM}-${ARCH}..."
     	(cd "${SRC_DIR}"; make build_libs >> "${LOG_FILE}" 2>&1)
@@ -90,7 +90,7 @@ function distribute_mac() {
     local PLATFORM="MacOSX"
     local NAME="${PLATFORM}"
     local DIR="${DIST_DIR}/${NAME}/openssl"
-    local FILES="libcrypto.a libssl.a"
+    local FILES="libcrypto.dylib libssl.dylib"
     mkdir -p "${DIR}/include"
     mkdir -p "${DIR}/lib"
 
@@ -100,29 +100,10 @@ function distribute_mac() {
     # Alter rsa.h to make Swift happy
     sed -i .bak 's/const BIGNUM \*I/const BIGNUM *i/g' "${DIR}/include/openssl/rsa.h"
 
-    echo "Combine library files"
     for f in ${FILES}; do
         local OUTPUT_FILE=${DIR}/lib/${f}
-        lipo -create \
-        "${BUILD_DIR}/MacOSX-x86_64/${f}" \
-        -output "${OUTPUT_FILE}"
-        echo "Created ${OUTPUT_FILE}"
-        echo "Architectues: $(lipo -info ${OUTPUT_FILE})"
+       copy "${BUILD_DIR}/MacOSX-x86_64/${f}" "${OUTPUT_FILE}"
     done
-
-	echo "Create Mac-Framework"
-	local FRAMEWORK_DIR=${DIST_DIR}/Framework-Mac
-	mkdir -p ${FRAMEWORK_DIR}/Openssl.framework/Headers
- 	mkdir -p ${FRAMEWORK_DIR}/Ssl.framework/Headers
-	mkdir -p ${FRAMEWORK_DIR}/Crypto.framework
-
-	cp -LR ${DIR}/include/openssl/ ${FRAMEWORK_DIR}/Openssl.framework/Headers/
-	cp -LR ${DIR}/include/openssl/ ${FRAMEWORK_DIR}/Ssl.framework/Headers/
-
-	copy "${DIR}/lib/libssl.a" "${FRAMEWORK_DIR}/Openssl.framework/ssl"
-	copy "${DIR}/lib/libssl.a" "${FRAMEWORK_DIR}/Ssl.framework/ssl"
-	copy "${DIR}/lib/libcrypto.a" "${FRAMEWORK_DIR}/Openssl.framework/crypto"
-	copy "${DIR}/lib/libcrypto.a" "${FRAMEWORK_DIR}/Crypto.framework/crypto"
 }
 
 function copy() {

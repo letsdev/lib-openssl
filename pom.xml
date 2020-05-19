@@ -75,9 +75,7 @@
                         <version>2.2-beta-5</version>
                         <configuration>
                             <descriptors>
-                                <descriptor>ssl-mac.xml</descriptor>
                                 <descriptor>openssl-mac.xml</descriptor>
-                                <descriptor>crypto-mac.xml</descriptor>
                             </descriptors>
                         </configuration>
                         <executions>
