@@ -102,7 +102,9 @@ function distribute_mac() {
 
     for f in ${FILES}; do
         local OUTPUT_FILE=${DIR}/lib/${f}
-       copy "${BUILD_DIR}/MacOSX-x86_64/${f}" "${OUTPUT_FILE}"
+        copy "${BUILD_DIR}/MacOSX-x86_64/${f}" "${OUTPUT_FILE}"
+        echo "Update loader path ${f}"
+        install_name_tool -id "@loader_path/${f}" "${OUTPUT_FILE}"
     done
 }
 
