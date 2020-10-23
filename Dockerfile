@@ -48,21 +48,11 @@ RUN yes | sdkmanager --licenses
 
 #Build Tools
 RUN echo "************ Installing Build Tools ************" \
-    && sdkmanager 'build-tools;28.0.3'
+    && sdkmanager 'build-tools;30.0.2'
 
 # CMake
 RUN echo "************ Installing C++ Support ************" \
-    && sdkmanager 'cmake;3.10.2.4988404'
-
-ENV NDK_VERSION=19c
-# NDK
-RUN echo "************ Installing Android NDK ${NDK_VERSION} ************" \
-    && wget --output-document=$HOME/ndk.zip -q \
-        "https://dl.google.com/android/repository/android-ndk-r${NDK_VERSION}-linux-x86_64.zip" \
-    && mkdir -p $ANDROID_NDK_HOME \
-    && unzip -q $HOME/ndk.zip -d $ANDROID_NDK_HOME  \
-    && mv $ANDROID_NDK_HOME/android-ndk-r${NDK_VERSION}/* $ANDROID_NDK_HOME \
-    && rm -f $HOME/ndk.zip && rm -d $ANDROID_NDK_HOME/android-ndk-r${NDK_VERSION}
+    && sdkmanager 'cmake;3.10.2.4988404' 'ndk;21.3.6528147'
 
 RUN useradd build -m -u 112
 USER build
