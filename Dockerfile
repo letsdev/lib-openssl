@@ -48,13 +48,13 @@ RUN yes | sdkmanager --licenses
 
 #Build Tools
 RUN echo "************ Installing Build Tools ************" \
-    && sdkmanager 'build-tools;28.0.3'
+    && sdkmanager 'build-tools;30.0.2'
 
 # CMake
 RUN echo "************ Installing C++ Support ************" \
     && sdkmanager 'cmake;3.10.2.4988404'
 
-ENV NDK_VERSION=19c
+ENV NDK_VERSION=21d
 # NDK
 RUN echo "************ Installing Android NDK ${NDK_VERSION} ************" \
     && wget --output-document=$HOME/ndk.zip -q \
