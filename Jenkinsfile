@@ -22,7 +22,7 @@ node('docker') {
     parallel(
             failFast: true,
             android: {
-                stage('android') {
+                stage('Android') {
                     dockerImage.inside(options) {
                         sh "./build-android.sh ${VERSION}"
                         sh 'mvn deploy -P android'
@@ -30,7 +30,7 @@ node('docker') {
                 }
             },
             ios: {
-                stage('xcode-11') {
+                stage('iOS') {
                     node('ios') {
                         deleteDir()
                         checkout scm
@@ -41,7 +41,7 @@ node('docker') {
                 }
             },
             mac: {
-                stage('xcode-11') {
+                stage('Mac') {
                     node('ios') {
                         deleteDir()
                         checkout scm
