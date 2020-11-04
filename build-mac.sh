@@ -104,8 +104,8 @@ function distribute_mac() {
         local OUTPUT_FILE=${DIR}/lib/${f}
         copy "${BUILD_DIR}/MacOSX-x86_64/${f}" "${OUTPUT_FILE}"
         echo "Update loader path ${f}"
-        install_name_tool -id "@loader_path/${f}" "${OUTPUT_FILE}"
-        install_name_tool -change "/usr/local/lib/libcrypto.1.1.dylib" "@loader_path/libcrypto.dylib" "${OUTPUT_FILE}"
+        install_name_tool -id "@rpath/${f}" "${OUTPUT_FILE}"
+        install_name_tool -change "/usr/local/lib/libcrypto.1.1.dylib" "@rpath/libcrypto.dylib" "${OUTPUT_FILE}"
     done
 }
 
