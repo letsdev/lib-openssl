@@ -69,11 +69,11 @@ function build_ios() {
 		# folder, zip, target, target dir
         unarchive ${OPENSSL_NAME} ${OPENSSL_PATH} "${PLATFORM}-${ARCH}" ${SRC_DIR}
 
-        if [[ "$ARCH" == "arm64" ]]; then
-          local TARGET_PATCH_FILE="${SRC_DIR}/Configurations/15-ios.conf"
-          echo "Patch ${TARGET_PATCH_FILE}"
-          patch ${TARGET_PATCH_FILE} "./15-ios.conf.patch"
-        fi
+        #if [[ "$ARCH" == "arm64" ]]; then
+      #    local TARGET_PATCH_FILE="${SRC_DIR}/Configurations/15-ios.conf"
+    #      echo "Patch ${TARGET_PATCH_FILE}"
+    #      patch ${TARGET_PATCH_FILE} "./15-ios.conf.patch"
+    #    fi
 
    		  echo "Configuring ${PLATFORM}-${ARCH}..."
         (cd "${SRC_DIR}"; ./Configure ${OPENSSL_CONFIG_OPTIONS} "${COMPILER}" > "${LOG_FILE}" 2>&1)
