@@ -15,7 +15,7 @@ download_openssl
 ## Parameters
 ## --------------------
 
-MAC_SDK=11.3
+MAC_SDK=12.4
 # i386 not working
 MAC_ARCHS="x86_64 arm64"
 
