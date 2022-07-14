@@ -100,12 +100,20 @@ function distribute_mac() {
     # Alter rsa.h to make Swift happy
     sed -i .bak 's/const BIGNUM \*I/const BIGNUM *i/g' "${DIR}/include/openssl/rsa.h"
 
+    echo "Combine library files"
+
     for f in ${FILES}; do
         local OUTPUT_FILE=${DIR}/lib/${f}
-        copy "${BUILD_DIR}/MacOSX-x86_64/${f}" "${OUTPUT_FILE}"
         echo "Update loader path ${f}"
-        install_name_tool -id "@rpath/${f}" "${OUTPUT_FILE}"
-        install_name_tool -change "/usr/local/lib/libcrypto.1.1.dylib" "@rpath/libcrypto.dylib" "${OUTPUT_FILE}"
+        install_name_tool -id "@rpath/${f}" "${BUILD_DIR}/MacOSX-x86_64/${f}"
+        install_name_tool -id "@rpath/${f}" "${BUILD_DIR}/MacOSX-arm64/${f}"
+        install_name_tool -change "/usr/local/lib/libcrypto.1.1.dylib" "@rpath/libcrypto.dylib" "${BUILD_DIR}/MacOSX-x86_64/${f}"
+        install_name_tool -change "/usr/local/lib/libcrypto.1.1.dylib" "@rpath/libcrypto.dylib" "${BUILD_DIR}/MacOSX-arm64/${f}"
+        lipo -create \
+        "${BUILD_DIR}/MacOSX-x86_64/${f}" \
+        "${BUILD_DIR}/MacOSX-arm64/${f}" \
+        -output ${OUTPUT_FILE}
+        echo "Created ${OUTPUT_FILE}"
     done
 }
 

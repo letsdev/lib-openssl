@@ -120,7 +120,6 @@ function distribute_ios() {
         lipo -create \
         "${BUILD_DIR}/iPhoneSimulator-x86_64/${f}" \
         "${BUILD_DIR}/iPhoneOS-arm64/${f}" \
-      #  "${BUILD_DIR}/iPhoneOS-arm64e/${f}" \
         "${BUILD_DIR}/iPhoneOS-armv7s/${f}" \
         -output ${OUTPUT_FILE}
         echo "Created ${OUTPUT_FILE}"
