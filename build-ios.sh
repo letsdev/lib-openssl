@@ -17,7 +17,7 @@ download_openssl
 
 IOS_SDK=15.2
 MIN_IOS=11.0
-IOS_ARCHS="x86_64 armv7s arm64 arm64e"
+IOS_ARCHS="x86_64 armv7s arm64"
 
 ## --------------------
 ## Variables
@@ -120,7 +120,7 @@ function distribute_ios() {
         lipo -create \
         "${BUILD_DIR}/iPhoneSimulator-x86_64/${f}" \
         "${BUILD_DIR}/iPhoneOS-arm64/${f}" \
-        "${BUILD_DIR}/iPhoneOS-arm64e/${f}" \
+      #  "${BUILD_DIR}/iPhoneOS-arm64e/${f}" \
         "${BUILD_DIR}/iPhoneOS-armv7s/${f}" \
         -output ${OUTPUT_FILE}
         echo "Created ${OUTPUT_FILE}"
