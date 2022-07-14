@@ -51,9 +51,6 @@ function build_mac() {
         if [[ "${ARCH}" == "i386" ]]; then
             COMPILER="darwin-i386-cc"
         fi
-        if [[ "${ARCH}" == "arm64" ]]; then
-            COMPILER="darwin-arm64-cc"
-        fi
 
         local SRC_DIR="${BUILD_DIR}/${PLATFORM}-${ARCH}"
         local LOG_FILE="${SRC_DIR}/${PLATFORM}${MAC_SDK}-${ARCH}.log"
