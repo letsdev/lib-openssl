@@ -109,7 +109,7 @@ function distribute_ios() {
 
     #echo "$VERSION" > "$DIR/VERSION"
     #cp "$BUILD_DIR/iPhoneSimulator-i386/LICENSE" "$DIR"
-    cp -LR "${BUILD_DIR}/iPhoneSimulator-i386/include/" "${DIR}/include"
+    cp -LR "${BUILD_DIR}/iPhoneSimulator-x86_64/include/" "${DIR}/include"
 
     # Alter rsa.h to make Swift happy
     sed -i .bak 's/const BIGNUM \*I/const BIGNUM *i/g' "${DIR}/include/openssl/rsa.h"
