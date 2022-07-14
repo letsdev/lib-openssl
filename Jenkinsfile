@@ -11,8 +11,8 @@ node('docker') {
     }
 
     GString options = """
-    -v ${env.WORKSPACE}:/home/build/app 
-    -v ${env.HOME}/.m2:/home/build/.m2 
+    -v ${env.WORKSPACE}:/home/build/app
+    -v ${env.HOME}/.m2:/home/build/.m2
     -v ${env.HOME}/.gitconfig:/home/build/.gitconfig
     -v ${env.HOME}/ld-config:/home/build/ld-config
     """
@@ -21,6 +21,17 @@ node('docker') {
 
     parallel(
             failFast: true,
+            mac: {
+                stage('Mac') {
+                    node('ios') {
+                        deleteDir()
+                        checkout scm
+                        sh "sudo xcode-select -s /Applications/Xcode-13.app"
+                        sh "./build-mac.sh ${VERSION}"
+                        sh 'mvn deploy -P mac'
+                    }
+                }
+            },
             android: {
                 stage('Android') {
                     dockerImage.inside(options) {
@@ -34,20 +45,9 @@ node('docker') {
                     node('ios') {
                         deleteDir()
                         checkout scm
-                        sh "sudo xcode-select -s /Applications/Xcode-12.app"
+                        sh "sudo xcode-select -s /Applications/Xcode-13.app"
                         sh "./build-ios.sh ${VERSION}"
                         sh 'mvn deploy -P ios'
-                    }
-                }
-            },
-            mac: {
-                stage('Mac') {
-                    node('ios') {
-                        deleteDir()
-                        checkout scm
-                        sh "sudo xcode-select -s /Applications/Xcode-12.app"
-                        sh "./build-mac.sh ${VERSION}"
-                        sh 'mvn deploy -P mac'
                     }
                 }
             }

@@ -17,7 +17,7 @@ download_openssl
 
 MAC_SDK=11.3
 # i386 not working
-MAC_ARCHS="x86_64"
+MAC_ARCHS="x86_64 arm64"
 
 ## --------------------
 ## Variables
@@ -50,6 +50,9 @@ function build_mac() {
         local COMPILER="darwin64-x86_64-cc"
         if [[ "${ARCH}" == "i386" ]]; then
             COMPILER="darwin-i386-cc"
+        fi
+        if [[ "${ARCH}" == "arm64" ]]; then
+            COMPILER="darwin-arm64-cc"
         fi
 
         local SRC_DIR="${BUILD_DIR}/${PLATFORM}-${ARCH}"
