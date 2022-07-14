@@ -70,18 +70,18 @@ function build_ios() {
         unarchive ${OPENSSL_NAME} ${OPENSSL_PATH} "${PLATFORM}-${ARCH}" ${SRC_DIR}
 
         local TARGET_PATCH_FILE="${SRC_DIR}/Configurations/15-ios.conf"
-        #echo "Patch ${TARGET_PATCH_FILE}"
-        #patch ${TARGET_PATCH_FILE} "./15-ios.conf.patch"
+        echo "Patch ${TARGET_PATCH_FILE}"
+        patch ${TARGET_PATCH_FILE} "./15-ios.conf.patch"
 
    		echo "Configuring ${PLATFORM}-${ARCH}..."
         (cd "${SRC_DIR}"; ./Configure ${OPENSSL_CONFIG_OPTIONS} "${COMPILER}" > "${LOG_FILE}" 2>&1)
 
         # Patch Makefile
-      #  if [[ "${ARCH}" == "x86_64" ]]; then
-      #      sed -ie "s/^CFLAG= -/CFLAG=  -miphoneos-version-min=$MIN_IOS -DOPENSSL_NO_ASM -/" "$SRC_DIR/Makefile"
-      #  else
-        sed -ie "s/^CFLAG= -/CFLAG=  -miphoneos-version-min=$MIN_IOS -/" "$SRC_DIR/Makefile"
-      #  fi
+        if [[ "${ARCH}" == "x86_64" ]]; then
+            sed -ie "s/^CFLAG= -/CFLAG=  -miphoneos-version-min=$MIN_IOS -DOPENSSL_NO_ASM -/" "$SRC_DIR/Makefile"
+        else
+          sed -ie "s/^CFLAG= -/CFLAG=  -miphoneos-version-min=$MIN_IOS -/" "$SRC_DIR/Makefile"
+        fi
         # Patch versions
         #sed -ie "s/^# define OPENSSL_VERSION_NUMBER.*$/# define OPENSSL_VERSION_NUMBER  $FAKE_NIBBLE/" "$SRC_DIR/crypto/opensslv.h"
         #sed -ie "s/^#  define OPENSSL_VERSION_TEXT.*$/#  define OPENSSL_VERSION_TEXT  \"$FAKE_TEXT\"/" "$SRC_DIR/crypto/opensslv.h"
