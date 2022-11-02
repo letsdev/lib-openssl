@@ -22,7 +22,7 @@ OPENSSL_CONFIG_OPTIONS="-no-asm"
 function download_openssl() {
     if [[ ! -e "$OPENSSL_PATH" ]]; then
         #curl -L "$OPENSSL_URL" -o "$OPENSSL_PATH"
-        log_title "Download ${OPENSSL_NAME}"
+        log_title "Download ${OPENSSL_NAME} url ${OPENSSL_URL}"
         wget --output-document=${OPENSSL_PATH} ${OPENSSL_URL} -q
     fi
 }
