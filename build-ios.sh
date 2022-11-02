@@ -15,7 +15,7 @@ download_openssl
 ## Parameters
 ## --------------------
 
-IOS_SDK=15.2
+IOS_SDK=15.5
 MIN_IOS=11.0
 IOS_ARCHS="x86_64 armv7s arm64"
 
