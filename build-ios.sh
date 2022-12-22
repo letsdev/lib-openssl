@@ -146,10 +146,10 @@ function distribute_ios() {
 	cp -LR ${DIR}/include/openssl/ ${FRAMEWORK_DIR}/Ssl.framework/Headers/
     cp -LR ${DIR}/include/openssl/ ${FRAMEWORK_DIR}/Crypto.framework/Headers/
 
-	copy "${BUILD_DIR}/iPhoneOS-arm64/libssl.a" "${FRAMEWORK_DIR}/Openssl.framework/ssl"
-	copy "${BUILD_DIR}/iPhoneOS-arm64/libssl.a" "${FRAMEWORK_DIR}/Ssl.framework/ssl"
-	copy "${BUILD_DIR}/iPhoneOS-arm64/libcrypto.a" "${FRAMEWORK_DIR}/Openssl.framework/crypto"
-	copy "${BUILD_DIR}/iPhoneOS-arm64/libcrypto.a" "${FRAMEWORK_DIR}/Crypto.framework/crypto"
+	copy "${BUILD_DIR}/iPhoneOS-arm64/libssl.a" "${FRAMEWORK_DIR}/Openssl.framework/Ssl"
+	copy "${BUILD_DIR}/iPhoneOS-arm64/libssl.a" "${FRAMEWORK_DIR}/Ssl.framework/Ssl"
+	copy "${BUILD_DIR}/iPhoneOS-arm64/libcrypto.a" "${FRAMEWORK_DIR}/Openssl.framework/Crypto"
+	copy "${BUILD_DIR}/iPhoneOS-arm64/libcrypto.a" "${FRAMEWORK_DIR}/Crypto.framework/Crypto"
 
 	echo "Create iOS Simulator-Framework"
 	local FRAMEWORK_DIR_SIMULATOR=${DIST_DIR}/Framework-Simulator
@@ -159,11 +159,12 @@ function distribute_ios() {
 
 	cp -LR ${DIR}/include/openssl/ ${FRAMEWORK_DIR_SIMULATOR}/Openssl.framework/Headers/
 	cp -LR ${DIR}/include/openssl/ ${FRAMEWORK_DIR_SIMULATOR}/Ssl.framework/Headers/
+    cp -LR ${DIR}/include/openssl/ ${FRAMEWORK_DIR_SIMULATOR}/Crypto.framework/Headers/
 
-	copy "${DIR}/lib/libssl.a" "${FRAMEWORK_DIR_SIMULATOR}/Openssl.framework/ssl"
-	copy "${DIR}/lib/libssl.a" "${FRAMEWORK_DIR_SIMULATOR}/Ssl.framework/ssl"
-	copy "${DIR}/lib/libcrypto.a" "${FRAMEWORK_DIR_SIMULATOR}/Openssl.framework/crypto"
-	copy "${DIR}/lib/libcrypto.a" "${FRAMEWORK_DIR_SIMULATOR}/Crypto.framework/crypto"
+	copy "${DIR}/lib/libssl.a" "${FRAMEWORK_DIR_SIMULATOR}/Openssl.framework/Ssl"
+	copy "${DIR}/lib/libssl.a" "${FRAMEWORK_DIR_SIMULATOR}/Ssl.framework/Ssl"
+	copy "${DIR}/lib/libcrypto.a" "${FRAMEWORK_DIR_SIMULATOR}/Openssl.framework/Crypto"
+	copy "${DIR}/lib/libcrypto.a" "${FRAMEWORK_DIR_SIMULATOR}/Crypto.framework/Crypto"
 
     echo "Create xc-Frameworks xcodebuild"
 	local XCFRAMEWORK_DIR=${DIST_DIR}/Framework-XC
