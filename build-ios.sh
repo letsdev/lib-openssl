@@ -15,9 +15,9 @@ download_openssl
 ## Parameters
 ## --------------------
 
-IOS_SDK=15.5
-MIN_IOS=11.0
-IOS_ARCHS="x86_64 armv7s arm64"
+IOS_SDK=16.2
+MIN_IOS=13.0
+IOS_ARCHS="x86_64 arm64 sim_arm64"
 
 ## --------------------
 ## Variables
@@ -49,23 +49,34 @@ function build_ios() {
         log_title "$ARCH"
         local PLATFORM="iPhoneOS"
         local COMPILER="iphoneos-cross"
-
-        if [[ "$ARCH" == "i386" || "$ARCH" == "x86_64" ]]; then
-            PLATFORM="iPhoneSimulator"
-        fi
-
+        
+        
         if [[ "$ARCH" == "arm64" || "$ARCH" == "arm64e" ]]; then
             COMPILER="ios64-cross"
+            ADDITIONAL_CC_ARGUMENTS="-miphoneos-version-min=${MIN_IOS}"
+        fi
+
+        if [[ "$ARCH" == "i386" || "$ARCH" == "x86_64" || "$ARCH" == "sim_arm64" ]]; then
+            PLATFORM="iPhoneSimulator"
+            if [[ "$ARCH" == "sim_arm64" ]]; then
+                ARCH="arm64"
+                COMPILER="iossimulator-xcrun"
+                ADDITIONAL_CC_ARGUMENTS="-mios-simulator-version-min=${MIN_IOS}"
+            fi
         fi
 
         local SRC_DIR="${BUILD_DIR}/${PLATFORM}-${ARCH}"
         local LOG_FILE="${SRC_DIR}/${PLATFORM}${IOS_SDK}-${ARCH}.log"
 
         export CROSS_TOP="${DEVELOPER_DIR}/Platforms/${PLATFORM}.platform/Developer"
-        export CROSS_SDK="${PLATFORM}${IOS_SDK}.sdk"
-        export CC="clang -arch ${ARCH} -fembed-bitcode"
+        export CROSS_SDK="${PLATFORM}.sdk"
+        export CROSS_SYSROOT="${CROSS_TOP}/SDKs/${CROSS_SDK}"
+        export CC="clang -arch ${ARCH} -fembed-bitcode ${ADDITIONAL_CC_ARGUMENTS} -isysroot ${CROSS_SYSROOT}"
         # indicate new build
         echo ">>>"
+        echo "Using CROSS_TOP: ${CROSS_TOP}"
+        echo "Using CROSS_SDK: ${CROSS_SDK}"
+        echo "Using CROSS_SYSROOT: ${CROSS_SYSROOT}"
 		# folder, zip, target, target dir
         unarchive ${OPENSSL_NAME} ${OPENSSL_PATH} "${PLATFORM}-${ARCH}" ${SRC_DIR}
 
@@ -75,8 +86,8 @@ function build_ios() {
     #      patch ${TARGET_PATCH_FILE} "./15-ios.conf.patch"
     #    fi
 
-   		  echo "Configuring ${PLATFORM}-${ARCH}..."
-        (cd "${SRC_DIR}"; ./Configure ${OPENSSL_CONFIG_OPTIONS} "${COMPILER}" > "${LOG_FILE}" 2>&1)
+   		echo "Configuring ${PLATFORM}-${ARCH}..."
+        (cd "${SRC_DIR}"; ./Configure "${COMPILER}" ${OPENSSL_CONFIG_OPTIONS} > "${LOG_FILE}" 2>&1)
 
         # Patch Makefile
         if [[ "${ARCH}" == "x86_64" ]]; then
@@ -119,14 +130,13 @@ function distribute_ios() {
         local OUTPUT_FILE=${DIR}/lib/${f}
         lipo -create \
         "${BUILD_DIR}/iPhoneSimulator-x86_64/${f}" \
-        "${BUILD_DIR}/iPhoneOS-arm64/${f}" \
-        "${BUILD_DIR}/iPhoneOS-armv7s/${f}" \
+        "${BUILD_DIR}/iPhoneSimulator-arm64/${f}" \
         -output ${OUTPUT_FILE}
         echo "Created ${OUTPUT_FILE}"
         echo "Architectues: $(lipo -info ${OUTPUT_FILE})"
     done
 
-	echo "Create iOS-Framework"
+	echo "Create iOS-Framework "
 	local FRAMEWORK_DIR=${DIST_DIR}/Framework-iOS
 	mkdir -p ${FRAMEWORK_DIR}/Openssl.framework/Headers
  	mkdir -p ${FRAMEWORK_DIR}/Ssl.framework/Headers
@@ -134,11 +144,33 @@ function distribute_ios() {
 
 	cp -LR ${DIR}/include/openssl/ ${FRAMEWORK_DIR}/Openssl.framework/Headers/
 	cp -LR ${DIR}/include/openssl/ ${FRAMEWORK_DIR}/Ssl.framework/Headers/
+    cp -LR ${DIR}/include/openssl/ ${FRAMEWORK_DIR}/Crypto.framework/Headers/
 
-	copy "${DIR}/lib/libssl.a" "${FRAMEWORK_DIR}/Openssl.framework/ssl"
-	copy "${DIR}/lib/libssl.a" "${FRAMEWORK_DIR}/Ssl.framework/ssl"
-	copy "${DIR}/lib/libcrypto.a" "${FRAMEWORK_DIR}/Openssl.framework/crypto"
-	copy "${DIR}/lib/libcrypto.a" "${FRAMEWORK_DIR}/Crypto.framework/crypto"
+	copy "${BUILD_DIR}/iPhoneOS-arm64/libssl.a" "${FRAMEWORK_DIR}/Openssl.framework/ssl"
+	copy "${BUILD_DIR}/iPhoneOS-arm64/libssl.a" "${FRAMEWORK_DIR}/Ssl.framework/ssl"
+	copy "${BUILD_DIR}/iPhoneOS-arm64/libcrypto.a" "${FRAMEWORK_DIR}/Openssl.framework/crypto"
+	copy "${BUILD_DIR}/iPhoneOS-arm64/libcrypto.a" "${FRAMEWORK_DIR}/Crypto.framework/crypto"
+
+	echo "Create iOS Simulator-Framework"
+	local FRAMEWORK_DIR_SIMULATOR=${DIST_DIR}/Framework-Simulator
+	mkdir -p ${FRAMEWORK_DIR_SIMULATOR}/Openssl.framework/Headers
+ 	mkdir -p ${FRAMEWORK_DIR_SIMULATOR}/Ssl.framework/Headers
+	mkdir -p ${FRAMEWORK_DIR_SIMULATOR}/Crypto.framework
+
+	cp -LR ${DIR}/include/openssl/ ${FRAMEWORK_DIR_SIMULATOR}/Openssl.framework/Headers/
+	cp -LR ${DIR}/include/openssl/ ${FRAMEWORK_DIR_SIMULATOR}/Ssl.framework/Headers/
+
+	copy "${DIR}/lib/libssl.a" "${FRAMEWORK_DIR_SIMULATOR}/Openssl.framework/ssl"
+	copy "${DIR}/lib/libssl.a" "${FRAMEWORK_DIR_SIMULATOR}/Ssl.framework/ssl"
+	copy "${DIR}/lib/libcrypto.a" "${FRAMEWORK_DIR_SIMULATOR}/Openssl.framework/crypto"
+	copy "${DIR}/lib/libcrypto.a" "${FRAMEWORK_DIR_SIMULATOR}/Crypto.framework/crypto"
+
+    echo "Create xc-Frameworks xcodebuild"
+	local XCFRAMEWORK_DIR=${DIST_DIR}/Framework-XC
+	mkdir -p ${XCFRAMEWORK_DIR}
+	
+    xcodebuild -create-xcframework -framework ${FRAMEWORK_DIR_SIMULATOR}/Ssl.framework -framework ${FRAMEWORK_DIR}/Ssl.framework -output ${XCFRAMEWORK_DIR}/Ssl.xcframework
+    xcodebuild -create-xcframework -framework ${FRAMEWORK_DIR_SIMULATOR}/Crypto.framework -framework ${FRAMEWORK_DIR}/Crypto.framework -output ${XCFRAMEWORK_DIR}/Crypto.xcframework
 }
 
 function copy() {

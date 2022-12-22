@@ -7,7 +7,7 @@
   <includeBaseDirectory>false</includeBaseDirectory>
   <fileSets>
     <fileSet>
-      <directory>${basedir}/dist/Framework-iOS/Ssl.framework/</directory>
+      <directory>${basedir}/dist/Framework-XC/Ssl.xcframework/</directory>
       <outputDirectory>/Ssl.framework/</outputDirectory>
       <includes>
         <include>**/*</include>

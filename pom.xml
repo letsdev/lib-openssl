@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>de.letsdev.intern.openssl</groupId>
+    <groupId>de.letsdev.frameworks.openssl</groupId>
     <artifactId>Openssl-mobile</artifactId>
     <version>1.1.1s</version>
 
@@ -49,7 +49,6 @@
                         <configuration>
                             <descriptors>
                                 <descriptor>ssl.xml</descriptor>
-                                <descriptor>openssl.xml</descriptor>
                                 <descriptor>crypto.xml</descriptor>
                             </descriptors>
                         </configuration>
