@@ -8,7 +8,7 @@
   <fileSets>
     <fileSet>
       <directory>${basedir}/dist/Framework-XC/Ssl.xcframework/</directory>
-      <outputDirectory>/Ssl.framework/</outputDirectory>
+      <outputDirectory>/Ssl.xcframework/</outputDirectory>
       <includes>
         <include>**/*</include>
       </includes>
