@@ -2,6 +2,7 @@ FROM ubuntu:18.04
 
 #SDK TOOLS 26.1.1
 ENV ANDROID_SDK_HOME="/opt/android-sdk" \
+    ANDROID_SDK_TOOLS_VERSION="4333796" \
     DEBIAN_FRONTEND="noninteractive"
 
 #Cannot access environment variables in the same time they are defined
@@ -34,7 +35,7 @@ RUN apt-get update \
 #Android SDK
 RUN echo "************ Installing Android SDK Tools ************" \
     && wget --output-document=sdk-tools.zip -q \
-        "https://dl.google.com/android/repository/platform-tools-latest-linux.zip" \
+        "https://dl.google.com/android/repository/sdk-tools-linux-$ANDROID_SDK_TOOLS_VERSION.zip" \
     && mkdir -p "$ANDROID_SDK_HOME" \
     && unzip -q sdk-tools.zip -d "$ANDROID_SDK_HOME" \
     && rm -f sdk-tools.zip
