@@ -54,7 +54,7 @@ RUN echo "************ Installing Build Tools ************" \
 RUN echo "************ Installing C++ Support ************" \
     && sdkmanager 'cmake;3.10.2.4988404'
 
-ENV NDK_VERSION=25d
+ENV NDK_VERSION=25b
 # NDK
 RUN echo "************ Installing Android NDK ${NDK_VERSION} ************" \
     && wget --output-document=$HOME/ndk.zip -q \
