@@ -15,7 +15,7 @@ download_openssl
 ## Parameters
 ## --------------------
 
-ANDROID_SDK=28
+ANDROID_SDK=30
 ANDROID_MIN_SDK=21
 
 ## --------------------

@@ -2,7 +2,6 @@ FROM ubuntu:18.04
 
 #SDK TOOLS 26.1.1
 ENV ANDROID_SDK_HOME="/opt/android-sdk" \
-    ANDROID_SDK_TOOLS_VERSION="4333796" \
     DEBIAN_FRONTEND="noninteractive"
 
 #Cannot access environment variables in the same time they are defined
@@ -35,7 +34,7 @@ RUN apt-get update \
 #Android SDK
 RUN echo "************ Installing Android SDK Tools ************" \
     && wget --output-document=sdk-tools.zip -q \
-        "https://dl.google.com/android/repository/sdk-tools-linux-$ANDROID_SDK_TOOLS_VERSION.zip" \
+        "https://dl.google.com/android/repository/platform-tools-latest-linux.zip" \
     && mkdir -p "$ANDROID_SDK_HOME" \
     && unzip -q sdk-tools.zip -d "$ANDROID_SDK_HOME" \
     && rm -f sdk-tools.zip
@@ -54,11 +53,11 @@ RUN echo "************ Installing Build Tools ************" \
 RUN echo "************ Installing C++ Support ************" \
     && sdkmanager 'cmake;3.10.2.4988404'
 
-ENV NDK_VERSION=21d
+ENV NDK_VERSION=25d
 # NDK
 RUN echo "************ Installing Android NDK ${NDK_VERSION} ************" \
     && wget --output-document=$HOME/ndk.zip -q \
-        "https://dl.google.com/android/repository/android-ndk-r${NDK_VERSION}-linux-x86_64.zip" \
+        "https://dl.google.com/android/repository/android-ndk-r${NDK_VERSION}-linux.zip" \
     && mkdir -p $ANDROID_NDK_HOME \
     && unzip -q $HOME/ndk.zip -d $ANDROID_NDK_HOME  \
     && mv $ANDROID_NDK_HOME/android-ndk-r${NDK_VERSION}/* $ANDROID_NDK_HOME \
