@@ -1,13 +1,12 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 #SDK TOOLS 26.1.1
-ENV ANDROID_SDK_HOME="/opt/android-sdk" \
-    ANDROID_SDK_TOOLS_VERSION="4333796" \
+ENV ANDROID_SDK_HOME="/usr/lib/android-sdk" \
     DEBIAN_FRONTEND="noninteractive"
 
 #Cannot access environment variables in the same time they are defined
-ENV PATH="$PATH:$ANDROID_SDK_HOME/tools:$ANDROID_SDK_HOME/tools/bin:$ANDROID_SDK_HOME/platform-tools" \
-    ANDROID_NDK_HOME="$ANDROID_SDK_HOME/ndk-bundle" \
+ENV PATH="$PATH:$ANDROID_SDK_HOME/tools:$ANDROID_SDK_HOME/tools/bin:$ANDROID_SDK_HOME/platform-tools:$ANDROID_SDK_HOME/cmdline-tools/latest/bin" \
+    ANDROID_NDK_HOME="$ANDROID_SDK_HOME/ndk-current" \
     ANDROID_HOME="$ANDROID_SDK_HOME" \
     ANDROID_SDK_ROOT="$ANDROID_SDK_HOME"
 
@@ -16,6 +15,7 @@ ENV PATH="$PATH:$ANDROID_SDK_HOME/tools:$ANDROID_SDK_HOME/tools/bin:$ANDROID_SDK
 RUN apt-get update \
     && apt-get install -yq \
         build-essential \
+        bash \
         software-properties-common \
         git \
         ninja-build \
@@ -28,16 +28,17 @@ RUN apt-get update \
         systemtap-sdt-dev \
         libbsd-dev \
         linux-libc-dev \
-        openjdk-8-jre-headless \
+        openjdk-11-jre-headless \
         maven \
     && apt-get clean
 
-#Android SDK
-RUN echo "************ Installing Android SDK Tools ************" \
+##Android SDK
+RUN echo "************ Installing Android Commandline Tools ************" \
     && wget --output-document=sdk-tools.zip -q \
-        "https://dl.google.com/android/repository/sdk-tools-linux-$ANDROID_SDK_TOOLS_VERSION.zip" \
-    && mkdir -p "$ANDROID_SDK_HOME" \
-    && unzip -q sdk-tools.zip -d "$ANDROID_SDK_HOME" \
+        "https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip" \
+    && mkdir -p "$ANDROID_SDK_HOME/cmdline-tools" \
+   && unzip -q sdk-tools.zip -d "$ANDROID_SDK_HOME/cmdline-tools" \
+   && mv "$ANDROID_SDK_HOME/cmdline-tools/cmdline-tools" "$ANDROID_SDK_HOME/cmdline-tools/latest" \
     && rm -f sdk-tools.zip
 
 #The `yes` is for accepting all non-standard tool licenses.
@@ -47,12 +48,18 @@ RUN mkdir "$ANDROID_SDK_HOME/.android" \
 RUN yes | sdkmanager --licenses
 
 #Build Tools
+RUN echo "************ Installing Platforms ************" \ 
+    && sdkmanager "platforms;android-21" "platforms;android-23" "platforms;android-25"
+
+RUN echo "************ Installing Platform Tools ************" \
+    && sdkmanager 'platform-tools'
+
 RUN echo "************ Installing Build Tools ************" \
-    && sdkmanager 'build-tools;30.0.2'
+    && sdkmanager 'build-tools;33.0.1'
 
 # CMake
 RUN echo "************ Installing C++ Support ************" \
-    && sdkmanager 'cmake;3.10.2.4988404'
+    && sdkmanager 'cmake;3.22.1'
 
 ENV NDK_VERSION=25b
 # NDK

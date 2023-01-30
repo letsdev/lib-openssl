@@ -16,7 +16,7 @@ download_openssl
 ## --------------------
 
 ANDROID_SDK=30
-ANDROID_MIN_SDK=21
+ANDROID_MIN_SDK=23
 
 ## --------------------
 ## Variables
