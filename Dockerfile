@@ -1,6 +1,6 @@
 FROM ubuntu:20.04
 
-#SDK TOOLS 26.1.1
+
 ENV ANDROID_SDK_HOME="/usr/lib/android-sdk" \
     DEBIAN_FRONTEND="noninteractive"
 
@@ -49,7 +49,7 @@ RUN yes | sdkmanager --licenses
 
 #Build Tools
 RUN echo "************ Installing Platforms ************" \ 
-    && sdkmanager "platforms;android-21" "platforms;android-23" "platforms;android-25"
+    && sdkmanager "platforms;android-21" "platforms;android-23" "platforms;android-25" "platforms;android-30" "platforms;android-33"
 
 RUN echo "************ Installing Platform Tools ************" \
     && sdkmanager 'platform-tools'
