@@ -109,7 +109,7 @@ function build_android_arch {
     export LDFLAGS=" ${ARCH_LINK} "
 
 	echo "Configuring android-${ABI}"
-	(cd "${SRC_DIR}"; ./Configure ${OPENSSL_CONFIG_OPTIONS} -DOPENSSL_PIC -fPIC "${COMPILER}" -D__ANDROID_API__=${ANDROID_MIN_SDK}> "${LOG_FILE}" 2>&1)
+	(cd "${SRC_DIR}"; ./Configure shared ${OPENSSL_CONFIG_OPTIONS} -DOPENSSL_PIC -fPIC "${COMPILER}" -D__ANDROID_API__=${ANDROID_MIN_SDK}> "${LOG_FILE}" 2>&1)
 
     echo "Building android-${ABI}..."
 	(cd "${SRC_DIR}"; make build_libs "CMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}" >> "${LOG_FILE}" 2>&1)
