@@ -166,8 +166,8 @@ function distribute_android {
 
         echo "Copy ${ABI}"
 		cp -LR ${BUILD_DIR}/android-${ABI}/include/* ${ABI_DIR}/include
-		cp ${BUILD_DIR}/android-${ABI}/libcrypto.a ${ABI_DIR}/lib/libcrypto.a
-		cp ${BUILD_DIR}/android-${ABI}/libssl.a ${ABI_DIR}/lib/libssl.a
+		cp ${BUILD_DIR}/android-${ABI}/libcrypto.so.1.1 ${ABI_DIR}/lib/libcrypto.so
+		cp ${BUILD_DIR}/android-${ABI}/libssl.so.1.1 ${ABI_DIR}/lib/libssl.so
     done
 }
 
