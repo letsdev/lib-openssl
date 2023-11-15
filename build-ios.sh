@@ -15,7 +15,7 @@ download_openssl
 ## Parameters
 ## --------------------
 
-IOS_SDK=15.5
+IOS_SDK=17.0
 MIN_IOS=12.0
 IOS_ARCHS="x86_64 arm64 sim_arm64"
 
@@ -71,7 +71,7 @@ function build_ios() {
         export CROSS_TOP="${DEVELOPER_DIR}/Platforms/${PLATFORM}.platform/Developer"
         export CROSS_SDK="${PLATFORM}.sdk"
         export CROSS_SYSROOT="${CROSS_TOP}/SDKs/${CROSS_SDK}"
-        export CC="clang -arch ${ARCH} -fembed-bitcode ${ADDITIONAL_CC_ARGUMENTS} -isysroot ${CROSS_SYSROOT}"
+        export CC="clang -arch ${ARCH} ${ADDITIONAL_CC_ARGUMENTS} -isysroot ${CROSS_SYSROOT}"
         # indicate new build
         echo ">>>"
         echo "Using CROSS_TOP: ${CROSS_TOP}"
