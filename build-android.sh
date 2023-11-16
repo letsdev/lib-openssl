@@ -27,6 +27,8 @@ if [[ ! -d "${ANDROID_NDK_HOME}" ]]; then
   exit 1
 fi
 
+export ANDROID_NDK_ROOT=$ANDROID_NDK_HOME
+
 ## --------------------
 ## Functions
 ## --------------------
