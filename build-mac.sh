@@ -112,8 +112,8 @@ function distribute_mac() {
         echo "Update loader path ${f}"
         install_name_tool -id "@rpath/${f}" "${BUILD_DIR}/MacOSX-x86_64/${f}"
         install_name_tool -id "@rpath/${f}" "${BUILD_DIR}/MacOSX-arm64/${f}"
-        install_name_tool -change "/usr/local/lib/libcrypto.1.1.dylib" "@rpath/libcrypto.dylib" "${BUILD_DIR}/MacOSX-x86_64/${f}"
-        install_name_tool -change "/usr/local/lib/libcrypto.1.1.dylib" "@rpath/libcrypto.dylib" "${BUILD_DIR}/MacOSX-arm64/${f}"
+        install_name_tool -change "/usr/local/lib/libcrypto.3.dylib" "@rpath/libcrypto.dylib" "${BUILD_DIR}/MacOSX-x86_64/${f}"
+        install_name_tool -change "/usr/local/lib/libcrypto.3.dylib" "@rpath/libcrypto.dylib" "${BUILD_DIR}/MacOSX-arm64/${f}"
         lipo -create \
         "${BUILD_DIR}/MacOSX-x86_64/${f}" \
         "${BUILD_DIR}/MacOSX-arm64/${f}" \
