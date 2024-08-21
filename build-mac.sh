@@ -29,7 +29,7 @@ if [[ ! -d ${DEVELOPER_DIR} ]]; then
     exit 1
 fi
 
-if [[ ! -d "${DEVELOPER_DIR}/Platforms/MacOSX.platform/Developer/SDKs/MacOSX${MAC_SDK}.sdk" ]]; then
+if [[ ! -d "${DEVELOPER_DIR}/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk" ]]; then
     echo "The MacOSX SDK ${MAC_SDK} was not found."
     exit 1
 fi
