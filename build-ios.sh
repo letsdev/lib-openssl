@@ -29,7 +29,7 @@ if [[ ! -d ${DEVELOPER_DIR} ]]; then
     exit 1
 fi
 
-if [[ ! -d "${DEVELOPER_DIR}/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS$.sdk" ]]; then
+if [[ ! -d "${DEVELOPER_DIR}/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk" ]]; then
     echo "The iOS SDK ${IOS_SDK} was not found."
     exit 1
 fi
