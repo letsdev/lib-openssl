@@ -140,11 +140,13 @@ function distribute_ios() {
 	local FRAMEWORK_DIR=${DIST_DIR}/Framework-iOS
 	mkdir -p ${FRAMEWORK_DIR}/Openssl.framework/Headers
  	mkdir -p ${FRAMEWORK_DIR}/Ssl.framework/Headers
+ 	mkdir -p ${FRAMEWORK_DIR}/Ssl.framework/Include/openssl
 	mkdir -p ${FRAMEWORK_DIR}/Crypto.framework
 
 	cp -LR ${DIR}/include/openssl/ ${FRAMEWORK_DIR}/Openssl.framework/Headers/
 	cp -LR ${DIR}/include/openssl/ ${FRAMEWORK_DIR}/Ssl.framework/Headers/
-    cp -LR ${DIR}/include/openssl/ ${FRAMEWORK_DIR}/Crypto.framework/Headers/
+	cp -LR ${DIR}/include/openssl/ ${FRAMEWORK_DIR}/Ssl.framework/Include/openssl/
+  cp -LR ${DIR}/include/openssl/ ${FRAMEWORK_DIR}/Crypto.framework/Headers/
 
 	copy "${BUILD_DIR}/iPhoneOS-arm64/libssl.a" "${FRAMEWORK_DIR}/Openssl.framework/Ssl"
 	copy "${BUILD_DIR}/iPhoneOS-arm64/libssl.a" "${FRAMEWORK_DIR}/Ssl.framework/Ssl"
@@ -155,11 +157,13 @@ function distribute_ios() {
 	local FRAMEWORK_DIR_SIMULATOR=${DIST_DIR}/Framework-Simulator
 	mkdir -p ${FRAMEWORK_DIR_SIMULATOR}/Openssl.framework/Headers
  	mkdir -p ${FRAMEWORK_DIR_SIMULATOR}/Ssl.framework/Headers
+ 	mkdir -p ${FRAMEWORK_DIR_SIMULATOR}/Ssl.framework/Include/openssl
 	mkdir -p ${FRAMEWORK_DIR_SIMULATOR}/Crypto.framework
 
 	cp -LR ${DIR}/include/openssl/ ${FRAMEWORK_DIR_SIMULATOR}/Openssl.framework/Headers/
 	cp -LR ${DIR}/include/openssl/ ${FRAMEWORK_DIR_SIMULATOR}/Ssl.framework/Headers/
-    cp -LR ${DIR}/include/openssl/ ${FRAMEWORK_DIR_SIMULATOR}/Crypto.framework/Headers/
+	cp -LR ${DIR}/include/openssl/ ${FRAMEWORK_DIR_SIMULATOR}/Ssl.framework/Include/openssl/
+  cp -LR ${DIR}/include/openssl/ ${FRAMEWORK_DIR_SIMULATOR}/Crypto.framework/Headers/
 
 	copy "${DIR}/lib/libssl.a" "${FRAMEWORK_DIR_SIMULATOR}/Openssl.framework/Ssl"
 	copy "${DIR}/lib/libssl.a" "${FRAMEWORK_DIR_SIMULATOR}/Ssl.framework/Ssl"
