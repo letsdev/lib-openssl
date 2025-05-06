@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.letsdev.frameworks.openssl</groupId>
     <artifactId>Openssl-mobile</artifactId>
-    <version>3.0.15</version>
+    <version>3.0.16</version>
 
     <name>Open ssl for mobile (android and iOS)</name>
 
