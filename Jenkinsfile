@@ -26,7 +26,7 @@ node('docker') {
                     node('ios') {
                         deleteDir()
                         checkout scm
-                        sh "sudo xcode-select -s /Applications/Xcode-15.app"
+                        sh "sudo xcode-select -s /Applications/Xcode-16.app"
                         sh "./build-mac.sh ${VERSION}"
                         sh 'mvn deploy -P mac'
                     }
@@ -45,7 +45,7 @@ node('docker') {
                     node('ios') {
                         deleteDir()
                         checkout scm
-                        sh "sudo xcode-select -s /Applications/Xcode-15.app"
+                        sh "sudo xcode-select -s /Applications/Xcode-16.app"
                         sh "./build-ios.sh ${VERSION}"
                         sh 'mvn deploy -P ios'
                     }
